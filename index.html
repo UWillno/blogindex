@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mirror Speed Test & Redirect</title>
+  <style>
+    :root {
+      --primary-bg: #fff;
+      --primary-text: #333;
+      --card-bg: #f8f9fa;
+      --border-color: #e0e0e0;
+      --success-color: #2ecc40;
+      --warning-color: #ff851b;
+      --error-color: #ff4136;
+      --info-color: #0074d9;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --primary-bg: #121212;
+        --primary-text: #f0f0f0;
+        --card-bg: #1e1e1e;
+        --border-color: #333;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--primary-bg);
+      color: var(--primary-text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 800px;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    h1 {
+      font-size: 2rem;
+      margin: 0 0 0.5rem;
+      font-weight: 600;
+      color: var(--primary-text);
+    }
+    
+    .subtitle {
+      font-size: 1rem;
+      color: #666;
+      margin: 0;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .subtitle {
+        color: #aaa;
+      }
+    }
+    
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+    }
+    
+    .mirror-test {
+      width: 100%;
+    }
+    
+    ul#mirror-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+    
+    ul#mirror-list li {
+      display: flex;
+      align-items: center;
+      font-size: 1.1rem;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      margin: 0.5rem 0;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      user-select: none;
+      color: inherit;
+      cursor: default;
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      ul#mirror-list li {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+    }
+    
+    ul#mirror-list li.checking {
+      opacity: 0.9;
+      background-color: rgba(0, 116, 217, 0.1);
+    }
+    
+    ul#mirror-list li.failed {
+      color: var(--error-color);
+      opacity: 0.8;
+      background-color: rgba(255, 65, 54, 0.1);
+    }
+    
+    ul#mirror-list li.available-green {
+      color: var(--success-color);
+      font-weight: 600;
+      opacity: 1;
+      background-color: rgba(46, 204, 64, 0.1);
+    }
+    
+    ul#mirror-list li.available-orange {
+      color: var(--warning-color);
+      font-weight: 600;
+      opacity: 1;
+      background-color: rgba(255, 133, 27, 0.1);
+    }
+    
+    ul#mirror-list li.available-red {
+      color: var(--error-color);
+      font-weight: 600;
+      opacity: 1;
+      background-color: rgba(255, 65, 54, 0.1);
+    }
+    
+    .icon {
+      width: 1.8em;
+      text-align: center;
+      font-size: 1.2em;
+      user-select: none;
+    }
+    
+    .mirror-name {
+      flex-grow: 1;
+    }
+    
+    .status {
+      min-width: 90px;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      font-weight: 600;
+    }
+    
+    .countdown-card {
+      text-align: center;
+      padding: 1.5rem;
+    }
+    
+    #countdown {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0;
+      color: inherit;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 3px;
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .progress-bar {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+    
+    .progress {
+      height: 100%;
+      width: 0;
+      background-color: var(--info-color);
+      transition: width 0.3s ease;
+    }
+    
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      padding: 1.5rem;
+      color: #666;
+      user-select: text;
+      width: 100%;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      footer {
+        color: #aaa;
+      }
+    }
+    
+    footer a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    
+    footer a:hover {
+      color: var(--info-color);
+      text-decoration: underline;
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      border: 2px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top-color: var(--info-color);
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.5rem 1rem;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .card {
+        padding: 1rem;
+      }
+      
+      ul#mirror-list li {
+        font-size: 1rem;
+        padding: 0.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Mirror Speed Test</h1>
+      <p class="subtitle">Testing available servers for optimal performance</p>
+    </header>
+    
+    <div class="card mirror-test">
+      <ul id="mirror-list">
+        <li id="m1" class="checking" title="GitHub Pages">
+          <span class="icon">🌐</span>
+          <span class="mirror-name">GitHub Pages</span>
+          <span class="status"><span class="spinner"></span> checking...</span>
+        </li>
+        <li id="m2" class="checking" title="Vercel">
+          <span class="icon">💠</span>
+          <span class="mirror-name">Vercel</span>
+          <span class="status"><span class="spinner"></span> checking...</span>
+        </li>
+        <li id="m3" class="checking" title="Cloudflare">
+          <span class="icon">🔶</span>
+          <span class="mirror-name">Cloudflare</span>
+          <span class="status"><span class="spinner"></span> checking...</span>
+        </li>
+        <li id="m4" class="checking" title="EdgeOne">
+          <span class="icon">🌀</span>
+          <span class="mirror-name">EdgeOne</span>
+          <span class="status"><span class="spinner"></span> checking...</span>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="card countdown-card">
+      <div id="countdown">Checking mirrors...</div>
+      <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <a href="https://icp.gov.moe/?keyword=20249102" target="_blank">萌ICP备20249102号</a>
+  </footer>
+
+<script>
+  const mirrors = [
+    { url: "https://github.uwillno.com", id: "m1" },
+    { url: "https://vercel.uwillno.com", id: "m2" },
+    { url: "https://cloudflare.uwillno.com", id: "m3" },
+    { url: "https://edgeone.uwillno.com", id: "m4" }
+  ];
+
+  function getColorClassByTime(ms) {
+    if (ms < 200) return 'available-green';      // < 200ms 绿色
+    else if (ms < 600) return 'available-orange'; // 200-600ms 橙色
+    else return 'available-red';                   // > 600ms 红色
+  }
+
+  function pingMirror(mirror) {
+    return new Promise(resolve => {
+      const el = document.getElementById(mirror.id);
+      const statusSpan = el.querySelector('.status');
+      const spinner = el.querySelector('.spinner');
+      const start = performance.now();
+      
+      fetch(mirror.url + '/__ping__.txt?_=' + Math.random(), { method: 'HEAD', mode: 'no-cors' })
+        .then(() => {
+          const time = Math.round(performance.now() - start);
+          el.classList.remove('checking', 'failed', 'available-green', 'available-orange', 'available-red');
+          el.classList.add(getColorClassByTime(time));
+          if (spinner) spinner.remove();
+          statusSpan.textContent = time + ' ms';
+          resolve({ ...mirror, time });
+        })
+        .catch(() => {
+          el.classList.remove('checking', 'available-green', 'available-orange', 'available-red');
+          el.classList.add('failed');
+          if (spinner) spinner.remove();
+          statusSpan.textContent = 'timeout';
+          resolve({ ...mirror, time: Infinity });
+        });
+    });
+  }
+
+  async function runTest() {
+    const countdown = document.getElementById('countdown');
+    const progress = document.getElementById('progress');
+    countdown.textContent = 'Checking mirrors...';
+
+    const results = await Promise.all(mirrors.map(pingMirror));
+
+    const fastest = results.filter(r => r.time !== Infinity).sort((a, b) => a.time - b.time)[0];
+
+    if (fastest) {
+      let seconds = 3;
+      countdown.textContent = `Redirecting to fastest mirror in ${seconds} seconds...`;
+      
+      const interval = setInterval(() => {
+        seconds--;
+        const progressPercent = ((3 - seconds) / 3) * 100;
+        progress.style.width = `${progressPercent}%`;
+        
+        if (seconds <= 0) {
+          clearInterval(interval);
+          window.location.href = fastest.url;
+        } else {
+          countdown.textContent = `Redirecting to fastest mirror in ${seconds} second${seconds !== 1 ? 's' : ''}...`;
+        }
+      }, 1000);
+    } else {
+      countdown.textContent = 'No reachable mirrors found. Please try again later.';
+      progress.style.width = '100%';
+      progress.style.backgroundColor = 'var(--error-color)';
+    }
+  }
+
+  // Start the test
+  runTest();
+</script>
+
+</body>
+</html>
