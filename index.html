@@ -108,7 +108,7 @@
       transition: all 0.3s ease;
       user-select: none;
       color: inherit;
-      cursor: default;
+      cursor: pointer;
       background-color: rgba(0, 0, 0, 0.03);
     }
     
@@ -116,6 +116,11 @@
       ul#mirror-list li {
         background-color: rgba(255, 255, 255, 0.05);
       }
+    }
+    
+    ul#mirror-list li:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     
     ul#mirror-list li.checking {
@@ -242,6 +247,48 @@
       to { transform: rotate(360deg); }
     }
     
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-primary {
+      background-color: var(--info-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--primary-text);
+    }
+    
+    .btn-outline:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .btn-outline:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+    }
+    
     @media (max-width: 600px) {
       .container {
         padding: 1.5rem 1rem;
@@ -271,22 +318,22 @@
     
     <div class="card mirror-test">
       <ul id="mirror-list">
-        <li id="m1" class="checking" title="GitHub Pages">
+        <li id="m1" class="checking" title="GitHub Pages" data-url="https://github.uwillno.com">
           <span class="icon">🌐</span>
           <span class="mirror-name">GitHub Pages</span>
           <span class="status"><span class="spinner"></span> checking...</span>
         </li>
-        <li id="m2" class="checking" title="Vercel">
+        <li id="m2" class="checking" title="Vercel" data-url="https://vercel.uwillno.com">
           <span class="icon">💠</span>
           <span class="mirror-name">Vercel</span>
           <span class="status"><span class="spinner"></span> checking...</span>
         </li>
-        <li id="m3" class="checking" title="Cloudflare">
+        <li id="m3" class="checking" title="Cloudflare" data-url="https://cloudflare.uwillno.com">
           <span class="icon">🔶</span>
           <span class="mirror-name">Cloudflare</span>
           <span class="status"><span class="spinner"></span> checking...</span>
         </li>
-        <li id="m4" class="checking" title="EdgeOne">
+        <li id="m4" class="checking" title="EdgeOne" data-url="https://edgeone.uwillno.com">
           <span class="icon">🌀</span>
           <span class="mirror-name">EdgeOne</span>
           <span class="status"><span class="spinner"></span> checking...</span>
@@ -298,6 +345,10 @@
       <div id="countdown">Checking mirrors...</div>
       <div class="progress-bar">
         <div class="progress" id="progress"></div>
+      </div>
+      <div class="action-buttons">
+        <button id="go-now-btn" class="btn btn-primary" disabled>Go to Fastest Mirror</button>
+        <button id="cancel-btn" class="btn btn-outline">Cancel Auto-Redirect</button>
       </div>
     </div>
   </div>
@@ -314,6 +365,10 @@
     { url: "https://edgeone.uwillno.com", id: "m4" }
   ];
 
+  let fastestMirror = null;
+  let redirectTimer = null;
+  let autoRedirectEnabled = true;
+
   function getColorClassByTime(ms) {
     if (ms < 200) return 'available-green';      // < 200ms 绿色
     else if (ms < 600) return 'available-orange'; // 200-600ms 橙色
@@ -326,6 +381,13 @@
       const statusSpan = el.querySelector('.status');
       const spinner = el.querySelector('.spinner');
       const start = performance.now();
+      
+      // 添加点击事件监听
+      el.addEventListener('click', () => {
+        if (el.classList.contains('failed')) return;
+        clearTimeout(redirectTimer);
+        window.location.href = mirror.url;
+      });
       
       fetch(mirror.url + '/__ping__.txt?_=' + Math.random(), { method: 'HEAD', mode: 'no-cors' })
         .then(() => {
@@ -346,36 +408,81 @@
     });
   }
 
-  async function runTest() {
+  function startRedirectCountdown(fastest) {
     const countdown = document.getElementById('countdown');
     const progress = document.getElementById('progress');
-    countdown.textContent = 'Checking mirrors...';
-
-    const results = await Promise.all(mirrors.map(pingMirror));
-
-    const fastest = results.filter(r => r.time !== Infinity).sort((a, b) => a.time - b.time)[0];
-
-    if (fastest) {
-      let seconds = 3;
-      countdown.textContent = `Redirecting to fastest mirror in ${seconds} seconds...`;
-      
-      const interval = setInterval(() => {
-        seconds--;
-        const progressPercent = ((3 - seconds) / 3) * 100;
-        progress.style.width = `${progressPercent}%`;
-        
-        if (seconds <= 0) {
-          clearInterval(interval);
-          window.location.href = fastest.url;
-        } else {
-          countdown.textContent = `Redirecting to fastest mirror in ${seconds} second${seconds !== 1 ? 's' : ''}...`;
-        }
-      }, 1000);
-    } else {
+    const goNowBtn = document.getElementById('go-now-btn');
+    
+    if (!fastest) {
       countdown.textContent = 'No reachable mirrors found. Please try again later.';
       progress.style.width = '100%';
       progress.style.backgroundColor = 'var(--error-color)';
+      goNowBtn.disabled = true;
+      return;
     }
+    
+    fastestMirror = fastest;
+    goNowBtn.disabled = false;
+    
+    let seconds = 5;
+    updateCountdownText(seconds, fastest);
+    
+    redirectTimer = setInterval(() => {
+      seconds--;
+      const progressPercent = ((5 - seconds) / 5) * 100;
+      progress.style.width = `${progressPercent}%`;
+      
+      if (seconds <= 0) {
+        clearInterval(redirectTimer);
+        if (autoRedirectEnabled) {
+          window.location.href = fastest.url;
+        }
+      } else {
+        updateCountdownText(seconds, fastest);
+      }
+    }, 1000);
+  }
+  
+  function updateCountdownText(seconds, fastest) {
+    const countdown = document.getElementById('countdown');
+    countdown.textContent = `Auto-redirecting to fastest mirror (${fastest.mirrorName}) in ${seconds} second${seconds !== 1 ? 's' : ''}...`;
+  }
+
+  async function runTest() {
+    const countdown = document.getElementById('countdown');
+    const goNowBtn = document.getElementById('go-now-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    
+    countdown.textContent = 'Checking mirrors...';
+    
+    // 设置"立即前往"按钮点击事件
+    goNowBtn.addEventListener('click', () => {
+      if (fastestMirror) {
+        window.location.href = fastestMirror.url;
+      }
+    });
+    
+    // 设置"取消自动跳转"按钮点击事件
+    cancelBtn.addEventListener('click', () => {
+      autoRedirectEnabled = false;
+      clearTimeout(redirectTimer);
+      countdown.textContent = `Fastest mirror is ${fastestMirror.mirrorName} (${fastestMirror.time} ms) - click to visit`;
+      cancelBtn.style.display = 'none';
+      goNowBtn.textContent = `Go to ${fastestMirror.mirrorName}`;
+    });
+
+    const results = await Promise.all(mirrors.map(pingMirror));
+    
+    // 为每个结果添加镜像名称
+    results.forEach(result => {
+      const el = document.getElementById(result.id);
+      if (el) {
+        result.mirrorName = el.title;
+      }
+    });
+
+    const fastest = results.filter(r => r.time !== Infinity).sort((a, b) => a.time - b.time)[0];
+    startRedirectCountdown(fastest);
   }
 
   // Start the test
