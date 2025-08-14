@@ -369,6 +369,12 @@
   let redirectTimer = null;
   let autoRedirectEnabled = true;
 
+  // 获取当前URL的查询参数
+  function getQueryParams() {
+    const queryString = window.location.search;
+    return queryString ? queryString : '';
+  }
+
   function getColorClassByTime(ms) {
     if (ms < 200) return 'available-green';      // < 200ms 绿色
     else if (ms < 600) return 'available-orange'; // 200-600ms 橙色
@@ -381,12 +387,13 @@
       const statusSpan = el.querySelector('.status');
       const spinner = el.querySelector('.spinner');
       const start = performance.now();
+      const queryParams = getQueryParams();
       
       // 添加点击事件监听
       el.addEventListener('click', () => {
         if (el.classList.contains('failed')) return;
         clearTimeout(redirectTimer);
-        window.location.href = mirror.url;
+        window.location.href = mirror.url + queryParams;
       });
       
       fetch(mirror.url + '/__ping__.txt?_=' + Math.random(), { method: 'HEAD', mode: 'no-cors' })
@@ -412,6 +419,7 @@
     const countdown = document.getElementById('countdown');
     const progress = document.getElementById('progress');
     const goNowBtn = document.getElementById('go-now-btn');
+    const queryParams = getQueryParams();
     
     if (!fastest) {
       countdown.textContent = 'No reachable mirrors found. Please try again later.';
@@ -424,6 +432,11 @@
     fastestMirror = fastest;
     goNowBtn.disabled = false;
     
+    // 更新"立即前往"按钮点击事件，包含查询参数
+    goNowBtn.onclick = function() {
+      window.location.href = fastest.url + queryParams;
+    };
+    
     let seconds = 5;
     updateCountdownText(seconds, fastest);
     
@@ -435,7 +448,7 @@
       if (seconds <= 0) {
         clearInterval(redirectTimer);
         if (autoRedirectEnabled) {
-          window.location.href = fastest.url;
+          window.location.href = fastest.url + queryParams;
         }
       } else {
         updateCountdownText(seconds, fastest);
@@ -452,15 +465,9 @@
     const countdown = document.getElementById('countdown');
     const goNowBtn = document.getElementById('go-now-btn');
     const cancelBtn = document.getElementById('cancel-btn');
+    const queryParams = getQueryParams();
     
     countdown.textContent = 'Checking mirrors...';
-    
-    // 设置"立即前往"按钮点击事件
-    goNowBtn.addEventListener('click', () => {
-      if (fastestMirror) {
-        window.location.href = fastestMirror.url;
-      }
-    });
     
     // 设置"取消自动跳转"按钮点击事件
     cancelBtn.addEventListener('click', () => {
