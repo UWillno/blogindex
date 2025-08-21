@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>镜像速度测试与跳转</title>
+  <title>Mirror Speed Test - 镜像速度测试</title>
   <style>
     :root {
       --primary-bg: #fff;
@@ -13,8 +13,13 @@
       --success-color: #2ecc40;
       --warning-color: #ff851b;
       --error-color: #ff4136;
-      --info-color: #0074d9;
+      --info-color: #088572;
       --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --lang-btn-bg: rgba(255, 255, 255, 0.9);
+      --lang-btn-text: #333;
+      --lang-btn-border: rgba(0, 0, 0, 0.1);
+      --lang-btn-active-bg: var(--info-color);
+      --lang-btn-active-text: white;
     }
     
     @media (prefers-color-scheme: dark) {
@@ -24,6 +29,11 @@
         --card-bg: #1e1e1e;
         --border-color: #333;
         --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        --lang-btn-bg: rgba(30, 30, 30, 0.95);
+        --lang-btn-text: #e0e0e0;
+        --lang-btn-border: rgba(255, 255, 255, 0.15);
+        --lang-btn-active-bg: var(--info-color);
+        --lang-btn-active-text: white;
       }
     }
     
@@ -96,6 +106,49 @@
       .subtitle {
         font-size: 1rem;
       }
+    }
+    
+    .language-switcher {
+      position: fixed;
+      /* top: 1rem; */
+      bottom: 2rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 100;
+      background: var(--lang-btn-bg);
+      padding: 0.4rem;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--lang-btn-border);
+    }
+    
+    .lang-btn {
+      background: transparent;
+      border: 1px solid var(--lang-btn-border);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      color: var(--lang-btn-text);
+      min-width: 60px;
+    }
+    
+    .lang-btn:hover {
+      background: rgba(0, 116, 217, 0.1);
+      border-color: rgba(0, 116, 217, 0.3);
+      transform: translateY(-1px);
+    }
+    
+    .lang-btn.active {
+      background: var(--lang-btn-active-bg);
+      color: var(--lang-btn-active-text);
+      border-color: var(--lang-btn-active-bg);
+      box-shadow: 0 2px 6px rgba(0, 116, 217, 0.3);
     }
     
     .card {
@@ -289,7 +342,7 @@
     }
     
     .status {
-      min-width: 80px;
+      min-width: 90px;
       font-variant-numeric: tabular-nums;
       text-align: right;
       font-weight: 600;
@@ -303,20 +356,20 @@
     
     @media (min-width: 768px) {
       .status {
-        min-width: 100px;
+        min-width: 110px;
         font-size: 1rem;
         gap: 0.5rem;
       }
     }
     
     .status-content {
-      min-width: 65px;
+      min-width: 70px;
       text-align: center;
     }
     
     @media (min-width: 768px) {
       .status-content {
-        min-width: 80px;
+        min-width: 85px;
       }
     }
     
@@ -530,17 +583,22 @@
   </style>
 </head>
 <body>
+  <div class="language-switcher">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">English</button>
+  </div>
+
   <div class="container">
     <header>
-      <h1>镜像速度测试</h1>
-      <p class="subtitle">测试可用服务器性能并选择最佳访问节点</p>
+      <h1 data-i18n="title">镜像速度测试</h1>
+      <p class="subtitle" data-i18n="subtitle">测试可用服务器性能并选择最佳访问节点</p>
     </header>
     
     <div class="card mirror-test">
       <div class="mirror-header">
-        <div class="mirror-title">可用镜像列表</div>
+        <div class="mirror-title" data-i18n="mirrorList">可用镜像列表</div>
         <button id="refresh-btn" class="refresh-btn">
-          <span class="icon">🔄</span> 重新测试
+          <span class="icon">🔄</span> <span data-i18n="retest">重新测试</span>
         </button>
       </div>
       <ul id="mirror-list">
@@ -549,7 +607,7 @@
           <span class="mirror-name">GitHub Pages</span>
           <span class="status">
             <span class="spinner"></span>
-            <span class="status-content">检测中...</span>
+            <span class="status-content" data-i18n="checking">检测中...</span>
           </span>
         </li>
         <li id="m2" class="checking" title="Vercel" data-url="https://vercel.uwillno.com">
@@ -557,7 +615,7 @@
           <span class="mirror-name">Vercel</span>
           <span class="status">
             <span class="spinner"></span>
-            <span class="status-content">检测中...</span>
+            <span class="status-content" data-i18n="checking">检测中...</span>
           </span>
         </li>
         <li id="m3" class="checking" title="Cloudflare" data-url="https://cloudflare.uwillno.com">
@@ -565,7 +623,7 @@
           <span class="mirror-name">Cloudflare</span>
           <span class="status">
             <span class="spinner"></span>
-            <span class="status-content">检测中...</span>
+            <span class="status-content" data-i18n="checking">检测中...</span>
           </span>
         </li>
         <li id="m4" class="checking" title="EdgeOne" data-url="https://edgeone.uwillno.com">
@@ -573,7 +631,7 @@
           <span class="mirror-name">EdgeOne</span>
           <span class="status">
             <span class="spinner"></span>
-            <span class="status-content">检测中...</span>
+            <span class="status-content" data-i18n="checking">检测中...</span>
           </span>
         </li>
         <li id="m5" class="checking" title="Netlify" data-url="https://netlify.uwillno.com">
@@ -581,14 +639,14 @@
           <span class="mirror-name">Netlify</span>
           <span class="status">
             <span class="spinner"></span>
-            <span class="status-content">检测中...</span>
+            <span class="status-content" data-i18n="checking">检测中...</span>
           </span>
         </li>
       </ul>
     </div>
     
     <div class="card countdown-card">
-      <div id="countdown">正在检测镜像速度...</div>
+      <div id="countdown" data-i18n="checkingMirrors">正在检测镜像速度...</div>
       <div class="progress-container">
         <div class="progress-bar">
           <div class="progress" id="progress"></div>
@@ -596,10 +654,10 @@
       </div>
       <div class="action-buttons">
         <button id="go-now-btn" class="btn btn-primary" disabled>
-          <span class="icon">🚀</span> 前往最快镜像
+          <span class="icon">🚀</span> <span data-i18n="goToFastest">前往最快镜像</span>
         </button>
         <button id="cancel-btn" class="btn btn-outline">
-          <span class="icon">⏹️</span> 取消自动跳转
+          <span class="icon">⏹️</span> <span data-i18n="cancelRedirect">取消自动跳转</span>
         </button>
       </div>
     </div>
@@ -610,6 +668,41 @@
   </footer>
 
 <script>
+  // 多语言配置
+  const translations = {
+    'zh': {
+      'title': '镜像速度测试',
+      'subtitle': '测试可用服务器性能并选择最佳访问节点',
+      'mirrorList': '可用镜像列表',
+      'retest': '重新测试',
+      'checking': '检测中...',
+      'checkingMirrors': '正在检测镜像速度...',
+      'goToFastest': '前往最快镜像',
+      'cancelRedirect': '取消自动跳转',
+      'timeout': '超时',
+      'redirecting': '秒后自动跳转到最快镜像',
+      'noMirrors': '未找到可用镜像，请稍后重试。',
+      'cancelled': '已取消自动跳转，最快镜像为',
+      'fastest': '最快'
+    },
+    'en': {
+      'title': 'Mirror Speed Test',
+      'subtitle': 'Testing available servers for optimal performance',
+      'mirrorList': 'Available Mirrors',
+      'retest': 'Retest',
+      'checking': 'checking...',
+      'checkingMirrors': 'Checking mirrors...',
+      'goToFastest': 'Go to Fastest Mirror',
+      'cancelRedirect': 'Cancel Auto-Redirect',
+      'timeout': 'timeout',
+      'redirecting': 'Auto-redirecting to fastest mirror in',
+      'noMirrors': 'No reachable mirrors found. Please try again later.',
+      'cancelled': 'Auto-redirect cancelled. Fastest mirror is',
+      'fastest': 'fastest'
+    }
+  };
+
+  let currentLang = 'zh';
   const mirrors = [
     { url: "https://github.uwillno.com", id: "m1" },
     { url: "https://vercel.uwillno.com", id: "m2" },
@@ -623,6 +716,46 @@
   let autoRedirectEnabled = true;
   let isTesting = true;
   let testResults = [];
+
+  // 切换语言函数
+  function setLanguage(lang) {
+    currentLang = lang;
+    
+    // 更新语言按钮状态
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    
+    // 更新所有文本
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+      const key = element.getAttribute('data-i18n');
+      if (translations[lang][key]) {
+        element.textContent = translations[lang][key];
+      }
+    });
+    
+    // 更新状态文本（如果测试已完成）
+    if (!isTesting) {
+      updateStatusTexts();
+    }
+  }
+
+  // 更新状态文本
+  function updateStatusTexts() {
+    testResults.forEach(result => {
+      const el = document.getElementById(result.id);
+      if (el) {
+        const statusContent = el.querySelector('.status-content');
+        if (statusContent) {
+          if (result.status === 'success') {
+            statusContent.textContent = result.time + ' ms';
+          } else if (result.status === 'failed') {
+            statusContent.textContent = translations[currentLang]['timeout'];
+          }
+        }
+      }
+    });
+  }
 
   // 获取当前URL的查询参数
   function getQueryParams() {
@@ -668,7 +801,7 @@
           el.classList.remove('checking', 'available-green', 'available-orange', 'available-red');
           el.classList.add('failed');
           if (spinner) spinner.remove();
-          statusContent.textContent = '超时';
+          statusContent.textContent = translations[currentLang]['timeout'];
           resolve({ ...mirror, time: Infinity, status: 'failed' });
         });
     });
@@ -681,7 +814,7 @@
     const queryParams = getQueryParams();
     
     if (!fastest) {
-      countdown.textContent = '未找到可用镜像，请稍后重试。';
+      countdown.textContent = translations[currentLang]['noMirrors'];
       progress.style.width = '100%';
       progress.style.backgroundColor = 'var(--error-color)';
       goNowBtn.disabled = true;
@@ -698,7 +831,7 @@
       if (!mirrorName.querySelector('.fastest-badge')) {
         const badge = document.createElement('span');
         badge.className = 'fastest-badge';
-        badge.textContent = '最快';
+        badge.textContent = translations[currentLang]['fastest'];
         mirrorName.appendChild(badge);
       }
     }
@@ -726,7 +859,7 @@
     const countdown = document.getElementById('countdown');
     const fastestEl = document.getElementById(fastest.id);
     const mirrorName = fastestEl ? fastestEl.title : fastest.url;
-    countdown.textContent = `${seconds}秒后自动跳转到最快镜像 (${mirrorName})...`;
+    countdown.textContent = `${seconds}${translations[currentLang]['redirecting']} (${mirrorName})...`;
   }
 
   function resetTest() {
@@ -740,7 +873,7 @@
     const cancelBtn = document.getElementById('cancel-btn');
     const refreshBtn = document.getElementById('refresh-btn');
     
-    countdown.textContent = '正在检测镜像速度...';
+    countdown.textContent = translations[currentLang]['checkingMirrors'];
     progress.style.width = '0%';
     progress.style.backgroundColor = 'var(--info-color)';
     goNowBtn.disabled = true;
@@ -755,7 +888,7 @@
         const statusContent = el.querySelector('.status-content');
         const spinner = el.querySelector('.spinner');
         if (statusContent) {
-          statusContent.textContent = '检测中...';
+          statusContent.textContent = translations[currentLang]['checking'];
         }
         if (!spinner) {
           const newSpinner = document.createElement('span');
@@ -780,7 +913,7 @@
     const refreshBtn = document.getElementById('refresh-btn');
     const queryParams = getQueryParams();
     
-    countdown.textContent = '正在检测镜像速度...';
+    countdown.textContent = translations[currentLang]['checkingMirrors'];
     
     // 设置按钮事件
     goNowBtn.onclick = function() {
@@ -792,9 +925,9 @@
     cancelBtn.onclick = function() {
       autoRedirectEnabled = false;
       clearTimeout(redirectTimer);
-      countdown.textContent = `已取消自动跳转，最快镜像为 ${fastestMirror.mirrorName} (${fastestMirror.time} ms)`;
+      countdown.textContent = `${translations[currentLang]['cancelled']} ${fastestMirror.mirrorName} (${fastestMirror.time} ms)`;
       cancelBtn.style.display = 'none';
-      goNowBtn.textContent = `前往 ${fastestMirror.mirrorName}`;
+      goNowBtn.querySelector('span:last-child').textContent = `${translations[currentLang]['goToFastest']} ${fastestMirror.mirrorName}`;
     };
 
     refreshBtn.onclick = resetTest;
@@ -814,6 +947,13 @@
     refreshBtn.disabled = false;
     startRedirectCountdown(fastest);
   }
+
+  // 初始化语言切换
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setLanguage(btn.dataset.lang);
+    });
+  });
 
   // Start the test
   runTest();
