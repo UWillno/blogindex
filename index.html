@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en-us">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mirror Speed Test & Redirect</title>
+  <title>镜像速度测试与跳转</title>
   <style>
     :root {
       --primary-bg: #fff;
@@ -29,11 +29,11 @@
     
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
     
     html, body {
-      margin: 0;
-      padding: 0;
       min-height: 100vh;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background-color: var(--primary-bg);
@@ -42,33 +42,44 @@
       flex-direction: column;
       align-items: center;
       user-select: none;
+      padding: 0;
+      margin: 0;
     }
     
     .container {
       width: 100%;
-      max-width: 800px;
-      padding: 2rem 1.5rem;
+      max-width: 100%;
+      padding: 1rem;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
     }
     
+    @media (min-width: 768px) {
+      .container {
+        max-width: 700px;
+        padding: 2rem 1.5rem;
+      }
+    }
+    
     header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
+      padding: 0 0.5rem;
     }
     
     h1 {
-      font-size: 2rem;
+      font-size: 1.5rem;
       margin: 0 0 0.5rem;
       font-weight: 600;
       color: var(--primary-text);
     }
     
     .subtitle {
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: #666;
       margin: 0;
+      line-height: 1.4;
     }
     
     @media (prefers-color-scheme: dark) {
@@ -77,13 +88,93 @@
       }
     }
     
+    @media (min-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
+    
     .card {
       background-color: var(--card-bg);
       border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
+      padding: 1.2rem;
+      margin-bottom: 1.2rem;
       box-shadow: var(--shadow);
       border: 1px solid var(--border-color);
+      width: 100%;
+    }
+    
+    @media (min-width: 768px) {
+      .card {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+    }
+    
+    .mirror-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    
+    @media (min-width: 480px) {
+      .mirror-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+    
+    .mirror-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: center;
+    }
+    
+    @media (min-width: 480px) {
+      .mirror-title {
+        text-align: left;
+      }
+    }
+    
+    .refresh-btn {
+      background-color: var(--info-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      justify-content: center;
+      width: 100%;
+    }
+    
+    @media (min-width: 480px) {
+      .refresh-btn {
+        width: auto;
+        justify-content: flex-start;
+      }
+    }
+    
+    .refresh-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    
+    .refresh-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
     }
     
     .mirror-test {
@@ -100,16 +191,27 @@
     ul#mirror-list li {
       display: flex;
       align-items: center;
-      font-size: 1.1rem;
-      gap: 1rem;
-      padding: 0.8rem 1rem;
-      margin: 0.5rem 0;
+      font-size: 0.95rem;
+      gap: 0.8rem;
+      padding: 0.8rem;
+      margin: 0.4rem 0;
       border-radius: 8px;
       transition: all 0.3s ease;
       user-select: none;
       color: inherit;
       cursor: pointer;
       background-color: rgba(0, 0, 0, 0.03);
+      min-height: 55px;
+    }
+    
+    @media (min-width: 768px) {
+      ul#mirror-list li {
+        font-size: 1.1rem;
+        gap: 1rem;
+        padding: 0.9rem 1rem;
+        margin: 0.5rem 0;
+        min-height: 60px;
+      }
     }
     
     @media (prefers-color-scheme: dark) {
@@ -156,33 +258,107 @@
     }
     
     .icon {
-      width: 1.8em;
+      width: 1.6em;
       text-align: center;
       font-size: 1.2em;
       user-select: none;
+      flex-shrink: 0;
+    }
+    
+    @media (min-width: 768px) {
+      .icon {
+        width: 1.8em;
+        font-size: 1.3em;
+      }
     }
     
     .mirror-name {
       flex-grow: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    
+    @media (min-width: 768px) {
+      .mirror-name {
+        font-size: 1.1rem;
+      }
     }
     
     .status {
-      min-width: 90px;
+      min-width: 80px;
       font-variant-numeric: tabular-nums;
       text-align: right;
       font-weight: 600;
+      flex-shrink: 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+    }
+    
+    @media (min-width: 768px) {
+      .status {
+        min-width: 100px;
+        font-size: 1rem;
+        gap: 0.5rem;
+      }
+    }
+    
+    .status-content {
+      min-width: 65px;
+      text-align: center;
+    }
+    
+    @media (min-width: 768px) {
+      .status-content {
+        min-width: 80px;
+      }
     }
     
     .countdown-card {
       text-align: center;
-      padding: 1.5rem;
+      padding: 1.2rem;
+    }
+    
+    @media (min-width: 768px) {
+      .countdown-card {
+        padding: 1.5rem;
+      }
     }
     
     #countdown {
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: 600;
       margin: 0;
       color: inherit;
+      min-height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.3rem 0;
+      line-height: 1.4;
+    }
+    
+    @media (min-width: 768px) {
+      #countdown {
+        font-size: 1.2rem;
+        min-height: 35px;
+      }
+    }
+    
+    .progress-container {
+      margin: 1rem 0;
+    }
+    
+    @media (min-width: 768px) {
+      .progress-container {
+        margin: 1.2rem 0;
+      }
     }
     
     .progress-bar {
@@ -190,7 +366,6 @@
       height: 6px;
       background-color: rgba(0, 0, 0, 0.1);
       border-radius: 3px;
-      margin-top: 1rem;
       overflow: hidden;
     }
     
@@ -209,11 +384,19 @@
     
     footer {
       text-align: center;
-      font-size: 0.85rem;
-      padding: 1.5rem;
+      font-size: 0.8rem;
+      padding: 1rem;
       color: #666;
       user-select: text;
       width: 100%;
+      margin-top: 0.5rem;
+    }
+    
+    @media (min-width: 768px) {
+      footer {
+        font-size: 0.85rem;
+        padding: 1.5rem;
+      }
     }
     
     @media (prefers-color-scheme: dark) {
@@ -235,12 +418,20 @@
     
     .spinner {
       display: inline-block;
-      width: 1em;
-      height: 1em;
+      width: 16px;
+      height: 16px;
       border: 2px solid rgba(0, 0, 0, 0.1);
       border-radius: 50%;
       border-top-color: var(--info-color);
       animation: spin 1s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    
+    @media (min-width: 768px) {
+      .spinner {
+        width: 18px;
+        height: 18px;
+      }
     }
     
     @keyframes spin {
@@ -249,18 +440,48 @@
     
     .action-buttons {
       display: flex;
-      gap: 1rem;
+      flex-direction: column;
+      gap: 0.8rem;
       justify-content: center;
-      margin-top: 1rem;
+      margin-top: 1.2rem;
+    }
+    
+    @media (min-width: 480px) {
+      .action-buttons {
+        flex-direction: row;
+        gap: 1rem;
+      }
     }
     
     .btn {
-      padding: 0.6rem 1.2rem;
-      border-radius: 6px;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
       border: none;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center;
+      font-size: 0.95rem;
+      width: 100%;
+    }
+    
+    @media (min-width: 480px) {
+      .btn {
+        width: auto;
+        min-width: 160px;
+        padding: 0.7rem 1.3rem;
+      }
+    }
+    
+    @media (min-width: 768px) {
+      .btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        min-width: 180px;
+      }
     }
     
     .btn-primary {
@@ -270,17 +491,18 @@
     
     .btn-primary:hover {
       opacity: 0.9;
-      transform: translateY(-1px);
+      transform: translateY(-2px);
     }
     
     .btn-outline {
       background-color: transparent;
-      border: 1px solid var(--border-color);
+      border: 2px solid var(--border-color);
       color: var(--primary-text);
     }
     
     .btn-outline:hover {
       background-color: rgba(0, 0, 0, 0.05);
+      transform: translateY(-2px);
     }
     
     @media (prefers-color-scheme: dark) {
@@ -289,22 +511,20 @@
       }
     }
     
-    @media (max-width: 600px) {
-      .container {
-        padding: 1.5rem 1rem;
-      }
-      
-      h1 {
-        font-size: 1.5rem;
-      }
-      
-      .card {
-        padding: 1rem;
-      }
-      
-      ul#mirror-list li {
-        font-size: 1rem;
-        padding: 0.7rem;
+    .fastest-badge {
+      background-color: var(--success-color);
+      color: white;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      margin-left: 0.4rem;
+      flex-shrink: 0;
+    }
+    
+    @media (min-width: 768px) {
+      .fastest-badge {
+        font-size: 0.75rem;
+        margin-left: 0.6rem;
       }
     }
   </style>
@@ -312,43 +532,75 @@
 <body>
   <div class="container">
     <header>
-      <h1>Mirror Speed Test</h1>
-      <p class="subtitle">Testing available servers for optimal performance</p>
+      <h1>镜像速度测试</h1>
+      <p class="subtitle">测试可用服务器性能并选择最佳访问节点</p>
     </header>
     
     <div class="card mirror-test">
+      <div class="mirror-header">
+        <div class="mirror-title">可用镜像列表</div>
+        <button id="refresh-btn" class="refresh-btn">
+          <span class="icon">🔄</span> 重新测试
+        </button>
+      </div>
       <ul id="mirror-list">
         <li id="m1" class="checking" title="GitHub Pages" data-url="https://github.uwillno.com">
           <span class="icon">🌐</span>
           <span class="mirror-name">GitHub Pages</span>
-          <span class="status"><span class="spinner"></span> checking...</span>
+          <span class="status">
+            <span class="spinner"></span>
+            <span class="status-content">检测中...</span>
+          </span>
         </li>
         <li id="m2" class="checking" title="Vercel" data-url="https://vercel.uwillno.com">
           <span class="icon">💠</span>
           <span class="mirror-name">Vercel</span>
-          <span class="status"><span class="spinner"></span> checking...</span>
+          <span class="status">
+            <span class="spinner"></span>
+            <span class="status-content">检测中...</span>
+          </span>
         </li>
         <li id="m3" class="checking" title="Cloudflare" data-url="https://cloudflare.uwillno.com">
           <span class="icon">🔶</span>
           <span class="mirror-name">Cloudflare</span>
-          <span class="status"><span class="spinner"></span> checking...</span>
+          <span class="status">
+            <span class="spinner"></span>
+            <span class="status-content">检测中...</span>
+          </span>
         </li>
         <li id="m4" class="checking" title="EdgeOne" data-url="https://edgeone.uwillno.com">
           <span class="icon">🌀</span>
           <span class="mirror-name">EdgeOne</span>
-          <span class="status"><span class="spinner"></span> checking...</span>
+          <span class="status">
+            <span class="spinner"></span>
+            <span class="status-content">检测中...</span>
+          </span>
+        </li>
+        <li id="m5" class="checking" title="Netlify" data-url="https://netlify.uwillno.com">
+          <span class="icon">🔷</span>
+          <span class="mirror-name">Netlify</span>
+          <span class="status">
+            <span class="spinner"></span>
+            <span class="status-content">检测中...</span>
+          </span>
         </li>
       </ul>
     </div>
     
     <div class="card countdown-card">
-      <div id="countdown">Checking mirrors...</div>
-      <div class="progress-bar">
-        <div class="progress" id="progress"></div>
+      <div id="countdown">正在检测镜像速度...</div>
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress" id="progress"></div>
+        </div>
       </div>
       <div class="action-buttons">
-        <button id="go-now-btn" class="btn btn-primary" disabled>Go to Fastest Mirror</button>
-        <button id="cancel-btn" class="btn btn-outline">Cancel Auto-Redirect</button>
+        <button id="go-now-btn" class="btn btn-primary" disabled>
+          <span class="icon">🚀</span> 前往最快镜像
+        </button>
+        <button id="cancel-btn" class="btn btn-outline">
+          <span class="icon">⏹️</span> 取消自动跳转
+        </button>
       </div>
     </div>
   </div>
@@ -362,12 +614,15 @@
     { url: "https://github.uwillno.com", id: "m1" },
     { url: "https://vercel.uwillno.com", id: "m2" },
     { url: "https://cloudflare.uwillno.com", id: "m3" },
-    { url: "https://edgeone.uwillno.com", id: "m4" }
+    { url: "https://edgeone.uwillno.com", id: "m4" },
+    { url: "https://netlify.uwillno.com", id: "m5" }
   ];
 
   let fastestMirror = null;
   let redirectTimer = null;
   let autoRedirectEnabled = true;
+  let isTesting = true;
+  let testResults = [];
 
   // 获取当前URL的查询参数
   function getQueryParams() {
@@ -376,41 +631,45 @@
   }
 
   function getColorClassByTime(ms) {
-    if (ms < 200) return 'available-green';      // < 200ms 绿色
-    else if (ms < 600) return 'available-orange'; // 200-600ms 橙色
-    else return 'available-red';                   // > 600ms 红色
+    if (ms < 200) return 'available-green';
+    else if (ms < 600) return 'available-orange';
+    else return 'available-red';
   }
 
   function pingMirror(mirror) {
     return new Promise(resolve => {
       const el = document.getElementById(mirror.id);
-      const statusSpan = el.querySelector('.status');
+      const statusContent = el.querySelector('.status-content');
       const spinner = el.querySelector('.spinner');
       const start = performance.now();
       const queryParams = getQueryParams();
       
       // 添加点击事件监听
       el.addEventListener('click', () => {
-        if (el.classList.contains('failed')) return;
         clearTimeout(redirectTimer);
         window.location.href = mirror.url + queryParams;
       });
       
-      fetch(mirror.url + '/__ping__.txt?_=' + Math.random(), { method: 'HEAD', mode: 'no-cors' })
+      fetch(mirror.url + '/__ping__.txt?_=' + Math.random(), { 
+        method: 'HEAD', 
+        mode: 'no-cors',
+        cache: 'no-store',
+        timeout: 5000
+      })
         .then(() => {
           const time = Math.round(performance.now() - start);
           el.classList.remove('checking', 'failed', 'available-green', 'available-orange', 'available-red');
           el.classList.add(getColorClassByTime(time));
           if (spinner) spinner.remove();
-          statusSpan.textContent = time + ' ms';
-          resolve({ ...mirror, time });
+          statusContent.textContent = time + ' ms';
+          resolve({ ...mirror, time, status: 'success' });
         })
         .catch(() => {
           el.classList.remove('checking', 'available-green', 'available-orange', 'available-red');
           el.classList.add('failed');
           if (spinner) spinner.remove();
-          statusSpan.textContent = 'timeout';
-          resolve({ ...mirror, time: Infinity });
+          statusContent.textContent = '超时';
+          resolve({ ...mirror, time: Infinity, status: 'failed' });
         });
     });
   }
@@ -422,7 +681,7 @@
     const queryParams = getQueryParams();
     
     if (!fastest) {
-      countdown.textContent = 'No reachable mirrors found. Please try again later.';
+      countdown.textContent = '未找到可用镜像，请稍后重试。';
       progress.style.width = '100%';
       progress.style.backgroundColor = 'var(--error-color)';
       goNowBtn.disabled = true;
@@ -432,10 +691,17 @@
     fastestMirror = fastest;
     goNowBtn.disabled = false;
     
-    // 更新"立即前往"按钮点击事件，包含查询参数
-    goNowBtn.onclick = function() {
-      window.location.href = fastest.url + queryParams;
-    };
+    // 标记最快镜像
+    const fastestEl = document.getElementById(fastest.id);
+    if (fastestEl) {
+      const mirrorName = fastestEl.querySelector('.mirror-name');
+      if (!mirrorName.querySelector('.fastest-badge')) {
+        const badge = document.createElement('span');
+        badge.className = 'fastest-badge';
+        badge.textContent = '最快';
+        mirrorName.appendChild(badge);
+      }
+    }
     
     let seconds = 5;
     updateCountdownText(seconds, fastest);
@@ -458,37 +724,94 @@
   
   function updateCountdownText(seconds, fastest) {
     const countdown = document.getElementById('countdown');
-    countdown.textContent = `Auto-redirecting to fastest mirror (${fastest.mirrorName}) in ${seconds} second${seconds !== 1 ? 's' : ''}...`;
+    const fastestEl = document.getElementById(fastest.id);
+    const mirrorName = fastestEl ? fastestEl.title : fastest.url;
+    countdown.textContent = `${seconds}秒后自动跳转到最快镜像 (${mirrorName})...`;
+  }
+
+  function resetTest() {
+    clearTimeout(redirectTimer);
+    autoRedirectEnabled = true;
+    isTesting = true;
+    
+    const countdown = document.getElementById('countdown');
+    const progress = document.getElementById('progress');
+    const goNowBtn = document.getElementById('go-now-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const refreshBtn = document.getElementById('refresh-btn');
+    
+    countdown.textContent = '正在检测镜像速度...';
+    progress.style.width = '0%';
+    progress.style.backgroundColor = 'var(--info-color)';
+    goNowBtn.disabled = true;
+    cancelBtn.style.display = 'block';
+    refreshBtn.disabled = true;
+    
+    // 重置所有镜像状态
+    mirrors.forEach(mirror => {
+      const el = document.getElementById(mirror.id);
+      if (el) {
+        el.className = 'checking';
+        const statusContent = el.querySelector('.status-content');
+        const spinner = el.querySelector('.spinner');
+        if (statusContent) {
+          statusContent.textContent = '检测中...';
+        }
+        if (!spinner) {
+          const newSpinner = document.createElement('span');
+          newSpinner.className = 'spinner';
+          el.querySelector('.status').prepend(newSpinner);
+        }
+        // 移除最快标记
+        const badge = el.querySelector('.fastest-badge');
+        if (badge) {
+          badge.remove();
+        }
+      }
+    });
+    
+    return runTest();
   }
 
   async function runTest() {
     const countdown = document.getElementById('countdown');
     const goNowBtn = document.getElementById('go-now-btn');
     const cancelBtn = document.getElementById('cancel-btn');
+    const refreshBtn = document.getElementById('refresh-btn');
     const queryParams = getQueryParams();
     
-    countdown.textContent = 'Checking mirrors...';
+    countdown.textContent = '正在检测镜像速度...';
     
-    // 设置"取消自动跳转"按钮点击事件
-    cancelBtn.addEventListener('click', () => {
+    // 设置按钮事件
+    goNowBtn.onclick = function() {
+      if (fastestMirror) {
+        window.location.href = fastestMirror.url + queryParams;
+      }
+    };
+    
+    cancelBtn.onclick = function() {
       autoRedirectEnabled = false;
       clearTimeout(redirectTimer);
-      countdown.textContent = `Fastest mirror is ${fastestMirror.mirrorName} (${fastestMirror.time} ms) - click to visit`;
+      countdown.textContent = `已取消自动跳转，最快镜像为 ${fastestMirror.mirrorName} (${fastestMirror.time} ms)`;
       cancelBtn.style.display = 'none';
-      goNowBtn.textContent = `Go to ${fastestMirror.mirrorName}`;
-    });
+      goNowBtn.textContent = `前往 ${fastestMirror.mirrorName}`;
+    };
 
-    const results = await Promise.all(mirrors.map(pingMirror));
+    refreshBtn.onclick = resetTest;
+
+    testResults = await Promise.all(mirrors.map(pingMirror));
     
     // 为每个结果添加镜像名称
-    results.forEach(result => {
+    testResults.forEach(result => {
       const el = document.getElementById(result.id);
       if (el) {
         result.mirrorName = el.title;
       }
     });
 
-    const fastest = results.filter(r => r.time !== Infinity).sort((a, b) => a.time - b.time)[0];
+    const fastest = testResults.filter(r => r.status === 'success').sort((a, b) => a.time - b.time)[0];
+    isTesting = false;
+    refreshBtn.disabled = false;
     startRedirectCountdown(fastest);
   }
 
