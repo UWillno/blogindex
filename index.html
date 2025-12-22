@@ -4,95 +4,44 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="keywords" content="UWillno,博客,Blog,Qt,WebAssembly" />
-  <meta name="author" content="UWillno" />
-  <meta name="description" content="UWillno的博客,UWillno's Blog" />
-  <meta name="copyright" content="UWillno" />
-  <meta name="robots" content="all" />
-  <meta name="location" content="province=湖北;city=武汉" />
-  <title>Mirror Speed Test - 镜像速度测试</title>
+  <meta name="keywords" content="UWillno,博客,Blog,Qt,WebAssembly">
+  <meta name="author" content="UWillno">
+  <meta name="description" content="UWillno的博客,UWillno's Blog">
+  <meta name="copyright" content="UWillno">
+  <meta name="robots" content="all">
+  <title>选择镜像</title>
   <style>
-    /* 新增代理提示样式 */
-    .proxy-notice {
-      background-color: rgba(8, 133, 114, 0.1);
-      border: 1px solid var(--info-color);
-      border-radius: 8px;
-      padding: 0.8rem 1rem;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.8rem;
-      width: 100%;
-    }
-
-    .proxy-notice-icon {
-      font-size: 1.2rem;
-      flex-shrink: 0;
-      margin-top: 0.1rem;
-    }
-
-    .proxy-notice-content {
-      flex-grow: 1;
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
-
-    .proxy-notice-close {
-      background: none;
-      border: none;
-      font-size: 1.2rem;
-      cursor: pointer;
-      padding: 0;
-      color: #666;
-      flex-shrink: 0;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      .proxy-notice {
-        background-color: rgba(8, 133, 114, 0.15);
-      }
-
-      .proxy-notice-close {
-        color: #aaa;
-      }
-    }
-
-    @media (min-width: 768px) {
-      .proxy-notice {
-        padding: 1rem 1.2rem;
-      }
-    }
-
     :root {
-      --primary-bg: #fff;
-      --primary-text: #333;
-      --card-bg: #f8f9fa;
-      --border-color: #e0e0e0;
-      --success-color: #2ecc40;
-      --warning-color: #ff851b;
-      --error-color: #ff4136;
-      --info-color: #088572;
-      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      --lang-btn-bg: rgba(255, 255, 255, 0.9);
-      --lang-btn-text: #333;
-      --lang-btn-border: rgba(0, 0, 0, 0.1);
-      --lang-btn-active-bg: var(--info-color);
-      --lang-btn-active-text: white;
-    }
+      --primary-bg: #f5f7fa;
+      --primary-text: #2c3e50;
+      --card-bg: #ffffff;
+      --card-border: #e1e8ed;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --primary-bg: #121212;
-        --primary-text: #f0f0f0;
-        --card-bg: #1e1e1e;
-        --border-color: #333;
-        --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        --lang-btn-bg: rgba(30, 30, 30, 0.95);
-        --lang-btn-text: #e0e0e0;
-        --lang-btn-border: rgba(255, 255, 255, 0.15);
-        --lang-btn-active-bg: var(--info-color);
-        --lang-btn-active-text: white;
-      }
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --error-color: #ef4444;
+      --info-color: #3b82f6;
+
+      --accent-color: #6366f1;
+      --accent-light: #818cf8;
+
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+
+      --lang-btn-bg: #ffffff;
+      --lang-btn-text: #475569;
+      --lang-btn-border: #e2e8f0;
+      --lang-btn-active-bg: var(--accent-color);
+      --lang-btn-active-text: white;
     }
 
     * {
@@ -101,73 +50,78 @@
       padding: 0;
     }
 
-    html,
+    html {
+      min-height: 100%;
+    }
+
     body {
       min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background-color: var(--primary-bg);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Noto Sans', sans-serif;
+      background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
       color: var(--primary-text);
       display: flex;
       flex-direction: column;
       align-items: center;
-      user-select: none;
+      line-height: 1.6;
       padding: 0;
       margin: 0;
     }
 
     .container {
       width: 100%;
-      max-width: 100%;
-      padding: 1rem;
+      max-width: 900px;
+      padding: 1.5rem;
       display: flex;
       flex-direction: column;
-      flex-grow: 1;
+      align-items: center;
+      flex: 1;
+    }
+
+    .header {
+      text-align: center;
+      margin: 1.5rem 0 2rem;
+      width: 100%;
     }
 
     h1 {
-      font-size: 1.5rem;
-      margin: 0 0 0.5rem;
-      font-weight: 600;
-      color: var(--primary-text);
+      font-size: 1.75rem;
+      margin: 0 0 0.5rem 0;
+      font-weight: 700;
+      color: var(--gray-800);
+      position: relative;
+      display: inline-block;
     }
 
-    .subtitle {
-      font-size: 0.9rem;
-      color: #666;
-      margin: 0;
-      line-height: 1.4;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      .subtitle {
-        color: #aaa;
-      }
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-color), var(--accent-light));
+      border-radius: 2px;
     }
 
     @media (min-width: 768px) {
       h1 {
         font-size: 2rem;
       }
-
-      .subtitle {
-        font-size: 1rem;
-      }
     }
 
     .language-switcher {
       position: fixed;
-      /* top: 1rem; */
-      bottom: 2rem;
-      right: 1rem;
+      bottom: 1.5rem;
+      right: 1.5rem;
       display: flex;
       gap: 0.5rem;
       z-index: 100;
       background: var(--lang-btn-bg);
-      padding: 0.4rem;
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      padding: 0.5rem;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(8px);
       border: 1px solid var(--lang-btn-border);
     }
 
@@ -175,7 +129,7 @@
       background: transparent;
       border: 1px solid var(--lang-btn-border);
       padding: 0.4rem 0.8rem;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       font-size: 0.85rem;
       font-weight: 500;
@@ -185,8 +139,8 @@
     }
 
     .lang-btn:hover {
-      background: rgba(0, 116, 217, 0.1);
-      border-color: rgba(0, 116, 217, 0.3);
+      background: var(--gray-100);
+      border-color: var(--gray-300);
       transform: translateY(-1px);
     }
 
@@ -194,343 +148,182 @@
       background: var(--lang-btn-active-bg);
       color: var(--lang-btn-active-text);
       border-color: var(--lang-btn-active-bg);
-      box-shadow: 0 2px 6px rgba(0, 116, 217, 0.3);
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
     }
 
-    .card {
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      padding: 1.2rem;
-      margin-bottom: 1.2rem;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border-color);
+    .mirrors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1.25rem;
+      margin: 1.5rem 0 3rem;
       width: 100%;
     }
 
-    @media (min-width: 768px) {
-      .card {
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
+    @media (min-width: 480px) {
+      .mirrors-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1.5rem;
       }
     }
 
-    .mirror-header {
+    @media (min-width: 768px) {
+      .mirrors-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 2rem;
+      }
+    }
+
+    .mirror-card {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: 1.5rem 1rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--card-border);
       display: flex;
       flex-direction: column;
-      gap: 0.8rem;
-      margin-bottom: 1rem;
-    }
-
-    @media (min-width: 480px) {
-      .mirror-header {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-      }
-    }
-
-    .mirror-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      text-align: center;
-    }
-
-    @media (min-width: 480px) {
-      .mirror-title {
-        text-align: left;
-      }
-    }
-
-    .refresh-btn {
-      background-color: var(--info-color);
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 500;
-      display: flex;
       align-items: center;
-      gap: 0.4rem;
-      transition: all 0.2s ease;
-      font-size: 0.9rem;
       justify-content: center;
-      width: 100%;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      min-height: 140px;
+      gap: 0.75rem;
     }
 
-    @media (min-width: 480px) {
-      .refresh-btn {
-        width: auto;
-        justify-content: flex-start;
-      }
+    .mirror-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--card-hover-shadow);
+      border-color: var(--accent-light);
     }
 
-    .refresh-btn:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
-
-    .refresh-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .mirror-test {
-      width: 100%;
-    }
-
-    ul#mirror-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      width: 100%;
-    }
-
-    ul#mirror-list li {
-      display: flex;
-      align-items: center;
-      font-size: 0.95rem;
-      gap: 0.8rem;
-      padding: 0.8rem;
-      margin: 0.4rem 0;
-      border-radius: 8px;
+    .mirror-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gray-200);
       transition: all 0.3s ease;
-      user-select: none;
-      color: inherit;
-      cursor: pointer;
-      background-color: rgba(0, 0, 0, 0.03);
-      min-height: 55px;
     }
 
-    @media (min-width: 768px) {
-      ul#mirror-list li {
-        font-size: 1.1rem;
-        gap: 1rem;
-        padding: 0.9rem 1rem;
-        margin: 0.5rem 0;
-        min-height: 60px;
-      }
-    }
-
-    @media (prefers-color-scheme: dark) {
-      ul#mirror-list li {
-        background-color: rgba(255, 255, 255, 0.05);
-      }
-    }
-
-    ul#mirror-list li:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    ul#mirror-list li.checking {
-      opacity: 0.9;
-      background-color: rgba(0, 116, 217, 0.1);
-    }
-
-    ul#mirror-list li.failed {
-      color: var(--error-color);
+    .mirror-card.checking {
       opacity: 0.8;
-      background-color: rgba(255, 65, 54, 0.1);
     }
 
-    ul#mirror-list li.available-green {
-      color: var(--success-color);
-      font-weight: 600;
-      opacity: 1;
-      background-color: rgba(46, 204, 64, 0.1);
+    .mirror-card.failed {
+      opacity: 0.6;
     }
 
-    ul#mirror-list li.available-orange {
-      color: var(--warning-color);
-      font-weight: 600;
-      opacity: 1;
-      background-color: rgba(255, 133, 27, 0.1);
+    .mirror-card.available-green::before {
+      background: linear-gradient(90deg, var(--success-color), #34d399);
     }
 
-    ul#mirror-list li.available-red {
-      color: var(--error-color);
-      font-weight: 600;
-      opacity: 1;
-      background-color: rgba(255, 65, 54, 0.1);
+    .mirror-card.available-orange::before {
+      background: linear-gradient(90deg, var(--warning-color), #fbbf24);
     }
 
-    .icon {
-      width: 1.6em;
-      text-align: center;
-      font-size: 1.2em;
-      user-select: none;
-      flex-shrink: 0;
+    .mirror-card.available-red::before {
+      background: linear-gradient(90deg, var(--error-color), #f87171);
     }
 
-    @media (min-width: 768px) {
-      .icon {
-        width: 1.8em;
-        font-size: 1.3em;
-      }
-    }
-
-    .mirror-name {
-      flex-grow: 1;
-      min-width: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-
-    @media (min-width: 768px) {
-      .mirror-name {
-        font-size: 1.1rem;
-      }
-    }
-
-    .status {
-      min-width: 90px;
-      font-variant-numeric: tabular-nums;
-      text-align: right;
-      font-weight: 600;
-      flex-shrink: 0;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.9rem;
-    }
-
-    @media (min-width: 768px) {
-      .status {
-        min-width: 110px;
-        font-size: 1rem;
-        gap: 0.5rem;
-      }
-    }
-
-    .status-content {
-      min-width: 70px;
-      text-align: center;
-    }
-
-    @media (min-width: 768px) {
-      .status-content {
-        min-width: 85px;
-      }
-    }
-
-    .countdown-card {
-      text-align: center;
-      padding: 1.2rem;
-    }
-
-    @media (min-width: 768px) {
-      .countdown-card {
-        padding: 1.5rem;
-      }
-    }
-
-    #countdown {
-      font-size: 1rem;
-      font-weight: 600;
-      margin: 0;
-      color: inherit;
-      min-height: 30px;
+    /* 图标容器样式 - 添加背景和圆角 */
+    .mirror-icon {
+      width: 64px;
+      height: 64px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0.3rem 0;
-      line-height: 1.4;
+      margin-bottom: 0.75rem;
+      background: var(--gray-50);
+      border-radius: 16px;
+      padding: 12px;
+      border: 1px solid var(--gray-200);
+      transition: all 0.3s ease;
     }
 
-    @media (min-width: 768px) {
-      #countdown {
-        font-size: 1.2rem;
-        min-height: 35px;
-      }
+    .mirror-card:hover .mirror-icon {
+      background: var(--gray-100);
+      border-color: var(--gray-300);
+      transform: scale(1.05);
     }
 
-    .progress-container {
-      margin: 1rem 0;
-    }
-
-    @media (min-width: 768px) {
-      .progress-container {
-        margin: 1.2rem 0;
-      }
-    }
-
-    .progress-bar {
+    /* 图片样式 - 优化黑白图标显示 */
+    .mirror-icon img,
+    .mirror-icon svg {
       width: 100%;
-      height: 6px;
-      background-color: rgba(0, 0, 0, 0.1);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      .progress-bar {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-    }
-
-    .progress {
       height: 100%;
-      width: 0;
-      background-color: var(--info-color);
-      transition: width 0.3s ease;
+      object-fit: contain;
+      display: block;
+      filter: brightness(0) saturate(100%) invert(17%) sepia(22%) saturate(956%) hue-rotate(185deg) brightness(94%) contrast(88%);
+      transition: all 0.3s ease;
     }
 
-    footer {
-      text-align: center;
-      font-size: 0.8rem;
-      padding: 1rem;
-      color: #666;
-      user-select: text;
-      width: 100%;
-      margin-top: 0.5rem;
+    .mirror-card:hover .mirror-icon img,
+    .mirror-card:hover .mirror-icon svg {
+      filter: brightness(0) saturate(100%) invert(33%) sepia(94%) saturate(748%) hue-rotate(226deg) brightness(98%) contrast(95%);
     }
 
-    @media (min-width: 768px) {
-      footer {
-        font-size: 0.85rem;
-        padding: 1.5rem;
+    /* 图标文本样式 */
+    .mirror-icon-text {
+      font-size: 2rem;
+      font-weight: normal;
+      color: var(--gray-700);
+    }
+
+    @media (min-width: 480px) {
+      .mirror-icon {
+        width: 72px;
+        height: 72px;
       }
     }
 
-    @media (prefers-color-scheme: dark) {
-      footer {
-        color: #aaa;
-      }
+    .mirror-status {
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 1.5rem;
+      line-height: 1;
     }
 
-    footer a {
-      color: inherit;
-      text-decoration: none;
-      transition: color 0.2s ease;
+    .mirror-status.checking {
+      color: var(--gray-500);
+      font-size: 0.95rem;
+      font-weight: 500;
     }
 
-    footer a:hover {
-      color: var(--info-color);
-      text-decoration: underline;
+    .mirror-status.available-green {
+      color: var(--success-color);
+    }
+
+    .mirror-status.available-orange {
+      color: var(--warning-color);
+    }
+
+    .mirror-status.available-red {
+      color: var(--error-color);
+    }
+
+    .mirror-status.failed {
+      color: var(--error-color);
+      font-size: 0.95rem;
+      font-weight: 500;
     }
 
     .spinner {
       display: inline-block;
       width: 16px;
       height: 16px;
-      border: 2px solid rgba(0, 0, 0, 0.1);
+      border: 2px solid var(--gray-300);
       border-radius: 50%;
-      border-top-color: var(--info-color);
-      animation: spin 1s ease-in-out infinite;
-      flex-shrink: 0;
-    }
-
-    @media (min-width: 768px) {
-      .spinner {
-        width: 18px;
-        height: 18px;
-      }
+      border-top-color: var(--accent-color);
+      animation: spin 0.8s linear infinite;
+      margin-right: 0.5rem;
     }
 
     @keyframes spin {
@@ -539,97 +332,75 @@
       }
     }
 
-    .action-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      justify-content: center;
-      margin-top: 1.2rem;
-    }
-
-    @media (min-width: 480px) {
-      .action-buttons {
-        flex-direction: row;
-        gap: 1rem;
-      }
-    }
-
-    .btn {
-      padding: 0.7rem 1.2rem;
-      border-radius: 8px;
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      justify-content: center;
-      font-size: 0.95rem;
-      width: 100%;
-    }
-
-    @media (min-width: 480px) {
-      .btn {
-        width: auto;
-        min-width: 160px;
-        padding: 0.7rem 1.3rem;
-      }
-    }
-
-    @media (min-width: 768px) {
-      .btn {
-        padding: 0.8rem 1.5rem;
-        font-size: 1rem;
-        min-width: 180px;
-      }
-    }
-
-    .btn-primary {
-      background-color: var(--info-color);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      opacity: 0.9;
-      transform: translateY(-2px);
-    }
-
-    .btn-outline {
-      background-color: transparent;
-      border: 2px solid var(--border-color);
-      color: var(--primary-text);
-    }
-
-    .btn-outline:hover {
-      background-color: rgba(0, 0, 0, 0.05);
-      transform: translateY(-2px);
-    }
-
-    @media (prefers-color-scheme: dark) {
-      .btn-outline:hover {
-        background-color: rgba(255, 255, 255, 0.05);
-      }
-    }
-
     .fastest-badge {
-      background-color: var(--success-color);
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: linear-gradient(135deg, var(--success-color), #34d399);
       color: white;
       font-size: 0.7rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-      margin-left: 0.4rem;
-      flex-shrink: 0;
+      padding: 0.25rem 0.5rem;
+      border-radius: 20px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+      z-index: 2;
+    }
+
+    .reorder-animation {
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      padding: 1.5rem;
+      color: var(--gray-600);
+      user-select: text;
+      width: 100%;
+      border-top: 1px solid var(--gray-200);
+      margin-top: 2rem;
+      background: var(--gray-50);
+      border-radius: 12px;
     }
 
     @media (min-width: 768px) {
-      .fastest-badge {
-        font-size: 0.75rem;
-        margin-left: 0.6rem;
+      footer {
+        font-size: 0.9rem;
+      }
+    }
+
+    footer a {
+      color: var(--accent-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-weight: 500;
+      position: relative;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+    }
+
+    footer a:hover {
+      color: var(--accent-light);
+      background: var(--gray-100);
+      text-decoration: none;
+    }
+
+    .mirror-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-top: 0.25rem;
+      opacity: 0.9;
+    }
+
+    @media (min-width: 480px) {
+      .mirror-name {
+        font-size: 1rem;
       }
     }
   </style>
-  <link rel="icon" type="image/png" href="uwlogo.png" />
+  <link rel="icon" type="image/png" href="uwlogo.png">
 </head>
 
 <body>
@@ -637,389 +408,1406 @@
     <button class="lang-btn active" data-lang="zh">中文</button>
     <button class="lang-btn" data-lang="en">English</button>
   </div>
+
   <div class="container">
-    <!-- 新增代理提示 -->
+    <!-- 标题区域 -->
+    <div class="header">
+      <h1 data-i18n="pageTitle">选择镜像</h1>
+    </div>
 
-    <div class="container">
-        <div class="proxy-notice" id="proxy-notice">
-          <div class="proxy-notice-icon">💡</div>
-          <div class="proxy-notice-content" data-i18n="proxyNotice">
-            提示：低延迟并不一定意味着高请求速率。启用代理工具以获得更好的访问体验。
-          </div>
-          <button class="proxy-notice-close" id="close-notice">×</button>
-        </div>
-      <div class="card mirror-test">
-        <div class="mirror-header">
-          <div class="mirror-title" data-i18n="mirrorList">可用镜像列表</div>
-          <button id="refresh-btn" class="refresh-btn">
-            <span class="icon">🔄</span> <span data-i18n="retest">重新测试</span>
-          </button>
-        </div>
-        <ul id="mirror-list">
-          <li id="m1" class="checking" title="GitHub Pages" data-url="https://github.uwillno.com">
-            <span class="icon">🌐</span>
-            <span class="mirror-name">GitHub Pages</span>
-            <span class="status">
-              <span class="spinner"></span>
-              <span class="status-content" data-i18n="checking">检测中...</span>
-            </span>
-          </li>
-          <li id="m2" class="checking" title="Vercel" data-url="https://vercel.uwillno.com">
-            <span class="icon">💠</span>
-            <span class="mirror-name">Vercel</span>
-            <span class="status">
-              <span class="spinner"></span>
-              <span class="status-content" data-i18n="checking">检测中...</span>
-            </span>
-          </li>
-          <li id="m3" class="checking" title="Cloudflare" data-url="https://cloudflare.uwillno.com">
-            <span class="icon">🔶</span>
-            <span class="mirror-name">Cloudflare</span>
-            <span class="status">
-              <span class="spinner"></span>
-              <span class="status-content" data-i18n="checking">检测中...</span>
-            </span>
-          </li>
-          <li id="m4" class="checking" title="EdgeOne" data-url="https://edgeone.uwillno.com">
-            <span class="icon">🌀</span>
-            <span class="mirror-name">EdgeOne</span>
-            <span class="status">
-              <span class="spinner"></span>
-              <span class="status-content" data-i18n="checking">检测中...</span>
-            </span>
-          </li>
-          <li id="m5" class="checking" title="Netlify" data-url="https://netlify.uwillno.com">
-            <span class="icon">🔷</span>
-            <span class="mirror-name">Netlify</span>
-            <span class="status">
-              <span class="spinner"></span>
-              <span class="status-content" data-i18n="checking">检测中...</span>
-            </span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="card countdown-card">
-        <div id="countdown" data-i18n="checkingMirrors">正在检测镜像速度...</div>
-        <div class="progress-container">
-          <div class="progress-bar">
-            <div class="progress" id="progress"></div>
-          </div>
-        </div>
-        <div class="action-buttons">
-          <button id="go-now-btn" class="btn btn-primary" disabled>
-            <span class="icon">🚀</span> <span data-i18n="goToFastest">前往最快镜像</span>
-          </button>
-          <button id="cancel-btn" class="btn btn-outline">
-            <span class="icon">⏹️</span> <span data-i18n="cancelRedirect">取消自动跳转</span>
-          </button>
-        </div>
-      </div>
+    <!-- 镜像卡片网格 -->
+    <div id="mirrors-container" class="mirrors-grid">
+      <!-- 卡片将通过JavaScript动态生成 -->
     </div>
 
     <footer>
       <a href="https://icp.gov.moe/?keyword=20249102" target="_blank">萌ICP备20249102号</a>
     </footer>
+  </div>
 
-    <script>
-      // 多语言配置
-      const translations = {
-        'zh': {
-          'mirrorList': '可用镜像列表',
-          'retest': '重新测试',
-          'checking': '检测中...',
-          'checkingMirrors': '正在检测镜像速度...',
-          'goToFastest': '前往最快镜像',
-          'cancelRedirect': '取消自动跳转',
-          'timeout': '超时',
-          'redirecting': '秒后自动跳转到最快镜像',
-          'noMirrors': '未找到可用镜像，请稍后重试。',
-          'cancelled': '已取消自动跳转，最快镜像为',
-          'fastest': '最快',
-          'proxyNotice': '提示：低延迟并不一定意味着高请求速率。启用代理工具以获得更好的访问体验。'
-        },
-        'en': {
-          'mirrorList': 'Available Mirrors',
-          'retest': 'Retest',
-          'checking': 'checking...',
-          'checkingMirrors': 'Checking mirrors...',
-          'goToFastest': 'Go to Fastest Mirror',
-          'cancelRedirect': 'Cancel Auto-Redirect',
-          'timeout': 'timeout',
-          'redirecting': 'Auto-redirecting to fastest mirror in',
-          'noMirrors': 'No reachable mirrors found. Please try again later.',
-          'cancelled': 'Auto-redirect cancelled. Fastest mirror is',
-          'fastest': 'fastest',
-          'proxyNotice': 'Tip: Low latency does not necessarily mean high request rate. Enabling proxy tools may provide a better access experience.'
+  <script>
+    // 多语言配置
+    const translations = {
+      'zh': {
+        'pageTitle': '选择镜像',
+        'checking': '检测中...',
+        'timeout': '超时',
+        'fastest': '最快'
+      },
+      'en': {
+        'pageTitle': 'Select Mirror',
+        'checking': 'Checking...',
+        'timeout': 'Timeout',
+        'fastest': 'Fastest'
+      }
+    };
+
+    // 镜像数据数组
+    const mirrorsData = [
+      {
+        id: "m1",
+        name: "GitHub Pages",
+        url: "https://github.uwillno.com",
+        icon: "github.svg",
+        description: "GitHub Pages 静态托管节点"
+      },
+      {
+        id: "m2",
+        name: "Vercel",
+        url: "https://vercel.uwillno.com",
+        icon: "vercel.svg",
+        description: "Vercel 全球边缘网络节点"
+      },
+      {
+        id: "m3",
+        name: "Cloudflare",
+        url: "https://cloudflare.uwillno.com",
+        icon: "cloudflare.svg",
+        description: "Cloudflare Pages 全球加速节点"
+      },
+      {
+        id: "m4",
+        name: "EdgeOne",
+        url: "https://edgeone.uwillno.com",
+        icon: "edgeone.svg",
+        description: "腾讯云 EdgeOne 加速节点"
+      },
+      {
+        id: "m5",
+        name: "Netlify",
+        url: "https://netlify.uwillno.com",
+        icon: "netlify.svg",
+        description: "Netlify 全球 CDN 节点"
+      },
+      {
+        id: "m6",
+        name: "Azure",
+        url: "https://azure.uwillno.com",
+        icon: "azure.svg",
+        description: "Azure 静态站点托管节点"
+      }
+    ];
+
+    let currentLang = 'zh';
+    let fastestMirror = null;
+    let testResults = [];
+    let testPromises = [];
+
+    // 辅助函数：检测是否是图片URL
+    function isImageUrl(str) {
+      return typeof str === 'string' &&
+        (str.startsWith('http') ||
+          /\.(svg|png|jpg|jpeg|gif|webp)$/i.test(str));
+    }
+
+    // 辅助函数：检测是否是SVG字符串
+    function isSvgString(str) {
+      return typeof str === 'string' && str.trim().startsWith('<svg');
+    }
+
+    // 生成图标HTML
+    function generateIconHTML(icon, name) {
+      if (isImageUrl(icon)) {
+        // 如果是图片URL
+        return `<img src="${icon}" alt="${name}" onerror="this.parentElement.innerHTML='<span class=\\'mirror-icon-text\\'>${name[0] || '?'}</span>'">`;
+      } else if (isSvgString(icon)) {
+        // 如果是SVG字符串
+        return icon;
+      } else {
+        // 默认使用文本/emoji
+        return `<span class="mirror-icon-text">${icon}</span>`;
+      }
+    }
+
+    // 根据延迟获取颜色类
+    function getColorClassByTime(ms) {
+      if (ms < 200) return 'available-green';
+      else if (ms < 600) return 'available-orange';
+      else return 'available-red';
+    }
+
+    // 移动卡片到正确位置
+    function moveCardToPosition(cardId, position) {
+      const container = document.getElementById('mirrors-container');
+      const cards = Array.from(container.children);
+      const targetCard = document.getElementById(cardId);
+      
+      if (!targetCard) return;
+      
+      // 移除动画类
+      targetCard.classList.remove('reorder-animation');
+      
+      // 获取当前索引和目标索引
+      const currentIndex = cards.findIndex(card => card.id === cardId);
+      
+      if (currentIndex !== -1 && currentIndex !== position) {
+        // 添加动画类
+        targetCard.classList.add('reorder-animation');
+        
+        // 移动卡片
+        if (position >= cards.length) {
+          container.appendChild(targetCard);
+        } else if (position === 0) {
+          container.prepend(targetCard);
+        } else {
+          const referenceCard = cards[position];
+          container.insertBefore(targetCard, referenceCard);
         }
-      };
-      // 添加关闭提示的功能
-      document.getElementById('close-notice').addEventListener('click', function () {
-        document.getElementById('proxy-notice').style.display = 'none';
-      });
-      let currentLang = 'zh';
-      const mirrors = [
-        { url: "https://github.uwillno.com", id: "m1" },
-        { url: "https://vercel.uwillno.com", id: "m2" },
-        { url: "https://cloudflare.uwillno.com", id: "m3" },
-        { url: "https://edgeone.uwillno.com", id: "m4" },
-        { url: "https://netlify.uwillno.com", id: "m5" }
-      ];
+        
+        // 动画完成后移除动画类
+        setTimeout(() => {
+          targetCard.classList.remove('reorder-animation');
+        }, 500);
+      }
+    }
 
-      let fastestMirror = null;
-      let redirectTimer = null;
-      let autoRedirectEnabled = true;
-      let isTesting = true;
-      let testResults = [];
-
-      // 切换语言函数
-      function setLanguage(lang) {
-        currentLang = lang;
-
-        // 更新语言按钮状态
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-          btn.classList.toggle('active', btn.dataset.lang === lang);
-        });
-
-        // 更新所有文本
-        document.querySelectorAll('[data-i18n]').forEach(element => {
-          const key = element.getAttribute('data-i18n');
-          if (translations[lang][key]) {
-            element.textContent = translations[lang][key];
-          }
-        });
-
-        // 更新状态文本（如果测试已完成）
-        if (!isTesting) {
-          updateStatusTexts();
+    // 更新卡片位置（基于当前结果）
+    function updateCardsPosition() {
+      // 创建一个数组，包含所有已测试和未测试的卡片
+      const allCards = Array.from(document.querySelectorAll('.mirror-card'));
+      
+      // 获取已完成的测试结果（按时间排序）
+      const completedTests = testResults.filter(r => r.time !== null);
+      const sortedCompleted = [...completedTests].sort((a, b) => a.time - b.time);
+      
+      // 获取正在测试中的卡片
+      const testingCards = allCards.filter(card => card.classList.contains('checking'));
+      
+      // 获取测试失败的卡片
+      const failedCards = allCards.filter(card => card.classList.contains('failed'));
+      
+      // 计算每个卡片应该的位置
+      const positionMap = {};
+      
+      // 1. 放置最快标记（如果有）
+      if (fastestMirror) {
+        positionMap[fastestMirror.id] = 0;
+      }
+      
+      // 2. 放置其他已完成的卡片（按时间排序）
+      let currentPosition = fastestMirror ? 1 : 0;
+      for (const result of sortedCompleted) {
+        if (result.id === fastestMirror?.id) continue;
+        positionMap[result.id] = currentPosition++;
+      }
+      
+      // 3. 放置正在测试中的卡片
+      for (const card of testingCards) {
+        if (!positionMap[card.id]) {
+          positionMap[card.id] = currentPosition++;
         }
       }
+      
+      // 4. 放置失败的卡片
+      for (const card of failedCards) {
+        if (!positionMap[card.id]) {
+          positionMap[card.id] = currentPosition++;
+        }
+      }
+      
+      // 应用位置调整
+      for (const [cardId, position] of Object.entries(positionMap)) {
+        moveCardToPosition(cardId, position);
+      }
+    }
 
-      // 更新状态文本
-      function updateStatusTexts() {
-        testResults.forEach(result => {
-          const el = document.getElementById(result.id);
-          if (el) {
-            const statusContent = el.querySelector('.status-content');
-            if (statusContent) {
-              if (result.status === 'success') {
-                statusContent.textContent = result.time + ' ms';
-              } else if (result.status === 'failed') {
-                statusContent.textContent = translations[currentLang]['timeout'];
+    // 测试单个镜像
+    async function testSingleMirror(mirror) {
+      const card = document.getElementById(mirror.id);
+      if (!card) return { ...mirror, time: null, status: 'failed' };
+      
+      const start = performance.now();
+      
+      try {
+        // 使用 Promise.race 实现超时控制
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('timeout')), 5000);
+        });
+        
+        const fetchPromise = fetch(mirror.url + '/__ping__.txt?_=' + Math.random(), {
+          method: 'HEAD',
+          mode: 'no-cors',
+          cache: 'no-store'
+        });
+        
+        await Promise.race([fetchPromise, timeoutPromise]);
+        
+        const time = Math.round(performance.now() - start);
+        
+        // 更新卡片状态
+        card.classList.remove('checking', 'failed');
+        card.classList.add(getColorClassByTime(time));
+        
+        const statusElement = card.querySelector('.mirror-status');
+        if (statusElement) {
+          statusElement.className = `mirror-status ${getColorClassByTime(time)}`;
+          statusElement.textContent = time + 'ms';
+          
+          // 检查是否为当前最快
+          const currentFastest = testResults.find(r => r.status === 'success' && r.time);
+          if (!currentFastest || time < currentFastest.time) {
+            // 移除之前的最快标记
+            if (fastestMirror) {
+              const fastestCard = document.getElementById(fastestMirror.id);
+              if (fastestCard) {
+                const badge = fastestCard.querySelector('.fastest-badge');
+                if (badge) badge.remove();
               }
             }
-          }
-        });
-      }
-
-      // 获取当前URL的查询参数
-      function getQueryParams() {
-        const queryString = window.location.search;
-        return queryString ? queryString : '';
-      }
-
-      function getColorClassByTime(ms) {
-        if (ms < 200) return 'available-green';
-        else if (ms < 600) return 'available-orange';
-        else return 'available-red';
-      }
-
-      function pingMirror(mirror) {
-        return new Promise(resolve => {
-          const el = document.getElementById(mirror.id);
-          const statusContent = el.querySelector('.status-content');
-          const spinner = el.querySelector('.spinner');
-          const start = performance.now();
-          const queryParams = getQueryParams();
-
-          // 添加点击事件监听
-          el.addEventListener('click', () => {
-            clearTimeout(redirectTimer);
-            window.location.href = mirror.url + queryParams;
-          });
-
-          fetch(mirror.url + '/__ping__.txt?_=' + Math.random(), {
-            method: 'HEAD',
-            mode: 'no-cors',
-            cache: 'no-store',
-            timeout: 5000
-          })
-            .then(() => {
-              const time = Math.round(performance.now() - start);
-              el.classList.remove('checking', 'failed', 'available-green', 'available-orange', 'available-red');
-              el.classList.add(getColorClassByTime(time));
-              if (spinner) spinner.remove();
-              statusContent.textContent = time + ' ms';
-              resolve({ ...mirror, time, status: 'success' });
-            })
-            .catch(() => {
-              el.classList.remove('checking', 'available-green', 'available-orange', 'available-red');
-              el.classList.add('failed');
-              if (spinner) spinner.remove();
-              statusContent.textContent = translations[currentLang]['timeout'];
-              resolve({ ...mirror, time: Infinity, status: 'failed' });
-            });
-        });
-      }
-
-      function startRedirectCountdown(fastest) {
-        const countdown = document.getElementById('countdown');
-        const progress = document.getElementById('progress');
-        const goNowBtn = document.getElementById('go-now-btn');
-        const queryParams = getQueryParams();
-
-        if (!fastest) {
-          countdown.textContent = translations[currentLang]['noMirrors'];
-          progress.style.width = '100%';
-          progress.style.backgroundColor = 'var(--error-color)';
-          goNowBtn.disabled = true;
-          return;
-        }
-
-        fastestMirror = fastest;
-        goNowBtn.disabled = false;
-
-        // 标记最快镜像
-        const fastestEl = document.getElementById(fastest.id);
-        if (fastestEl) {
-          const mirrorName = fastestEl.querySelector('.mirror-name');
-          if (!mirrorName.querySelector('.fastest-badge')) {
-            const badge = document.createElement('span');
+            
+            // 设置新的最快镜像
+            fastestMirror = { ...mirror, time };
+            
+            // 添加最快标记
+            const badge = document.createElement('div');
             badge.className = 'fastest-badge';
             badge.textContent = translations[currentLang]['fastest'];
-            mirrorName.appendChild(badge);
+            card.appendChild(badge);
           }
         }
+        
+        // 返回结果
+        return { ...mirror, time, status: 'success' };
+        
+      } catch (error) {
+        // 测试失败
+        card.classList.remove('checking');
+        card.classList.add('failed');
+        
+        const statusElement = card.querySelector('.mirror-status');
+        if (statusElement) {
+          statusElement.className = 'mirror-status failed';
+          statusElement.textContent = translations[currentLang]['timeout'];
+        }
+        
+        return { ...mirror, time: null, status: 'failed' };
+      }
+    }
 
-        let seconds = 5;
-        updateCountdownText(seconds, fastest);
+    // 初始化函数
+    function init() {
+      // 设置语言
+      setLanguage('zh');
 
-        redirectTimer = setInterval(() => {
-          seconds--;
-          const progressPercent = ((5 - seconds) / 5) * 100;
-          progress.style.width = `${progressPercent}%`;
+      // 生成镜像卡片
+      generateMirrorCards();
 
-          if (seconds <= 0) {
-            clearInterval(redirectTimer);
-            if (autoRedirectEnabled) {
-              window.location.href = fastest.url + queryParams;
-            }
+      // 开始动态测试
+      startDynamicTesting();
+
+      // 绑定事件
+      bindEvents();
+    }
+
+    // 生成镜像卡片
+    function generateMirrorCards() {
+      const container = document.getElementById('mirrors-container');
+      container.innerHTML = '';
+
+      mirrorsData.forEach(mirror => {
+        const card = document.createElement('div');
+        card.className = 'mirror-card checking';
+        card.id = mirror.id;
+        card.dataset.url = mirror.url;
+        card.title = `${mirror.name}\n${mirror.description}`;
+
+        card.innerHTML = `
+          <div class="mirror-icon">
+            ${generateIconHTML(mirror.icon, mirror.name)}
+          </div>
+          <div class="mirror-name">${mirror.name}</div>
+          <div class="mirror-status checking">
+            <span class="spinner"></span>
+            <span data-i18n="checking">检测中...</span>
+          </div>
+        `;
+
+        // 添加点击事件
+        card.addEventListener('click', () => {
+          const queryParams = window.location.search;
+          window.open(mirror.url + queryParams, '_blank');
+        });
+
+        container.appendChild(card);
+      });
+    }
+
+    // 开始动态测试
+    function startDynamicTesting() {
+      // 重置状态
+      testResults = [];
+      fastestMirror = null;
+      testPromises = [];
+
+      // 为每个镜像启动测试
+      mirrorsData.forEach(mirror => {
+        const testPromise = testSingleMirror(mirror).then(result => {
+          // 更新测试结果
+          const existingIndex = testResults.findIndex(r => r.id === result.id);
+          if (existingIndex !== -1) {
+            testResults[existingIndex] = result;
           } else {
-            updateCountdownText(seconds, fastest);
+            testResults.push(result);
           }
-        }, 1000);
-      }
-
-      function updateCountdownText(seconds, fastest) {
-        const countdown = document.getElementById('countdown');
-        const fastestEl = document.getElementById(fastest.id);
-        const mirrorName = fastestEl ? fastestEl.title : fastest.url;
-        countdown.textContent = `${seconds}${translations[currentLang]['redirecting']} (${mirrorName})...`;
-      }
-
-      function resetTest() {
-        clearTimeout(redirectTimer);
-        autoRedirectEnabled = true;
-        isTesting = true;
-
-        const countdown = document.getElementById('countdown');
-        const progress = document.getElementById('progress');
-        const goNowBtn = document.getElementById('go-now-btn');
-        const cancelBtn = document.getElementById('cancel-btn');
-        const refreshBtn = document.getElementById('refresh-btn');
-
-        countdown.textContent = translations[currentLang]['checkingMirrors'];
-        progress.style.width = '0%';
-        progress.style.backgroundColor = 'var(--info-color)';
-        goNowBtn.disabled = true;
-        cancelBtn.style.display = 'block';
-        refreshBtn.disabled = true;
-
-        // 重置所有镜像状态
-        mirrors.forEach(mirror => {
-          const el = document.getElementById(mirror.id);
-          if (el) {
-            el.className = 'checking';
-            const statusContent = el.querySelector('.status-content');
-            const spinner = el.querySelector('.spinner');
-            if (statusContent) {
-              statusContent.textContent = translations[currentLang]['checking'];
-            }
-            if (!spinner) {
-              const newSpinner = document.createElement('span');
-              newSpinner.className = 'spinner';
-              el.querySelector('.status').prepend(newSpinner);
-            }
-            // 移除最快标记
-            const badge = el.querySelector('.fastest-badge');
-            if (badge) {
-              badge.remove();
-            }
-          }
+          
+          // 更新卡片位置
+          updateCardsPosition();
+          
+          return result;
         });
+        
+        testPromises.push(testPromise);
+      });
+    }
 
-        return runTest();
-      }
+    // 切换语言函数
+    function setLanguage(lang) {
+      currentLang = lang;
 
-      async function runTest() {
-        const countdown = document.getElementById('countdown');
-        const goNowBtn = document.getElementById('go-now-btn');
-        const cancelBtn = document.getElementById('cancel-btn');
-        const refreshBtn = document.getElementById('refresh-btn');
-        const queryParams = getQueryParams();
+      // 更新语言按钮状态
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
 
-        countdown.textContent = translations[currentLang]['checkingMirrors'];
+      // 更新所有文本
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+          element.textContent = translations[lang][key];
+        }
+      });
 
-        // 设置按钮事件
-        goNowBtn.onclick = function () {
-          if (fastestMirror) {
-            window.location.href = fastestMirror.url + queryParams;
+      // 更新状态文本
+      updateStatusTexts();
+
+      // 更新最快标记的文本
+      updateFastestBadgeText();
+    }
+
+    // 更新最快标记的文本
+    function updateFastestBadgeText() {
+      if (fastestMirror) {
+        const fastestCard = document.getElementById(fastestMirror.id);
+        if (fastestCard) {
+          const badge = fastestCard.querySelector('.fastest-badge');
+          if (badge) {
+            badge.textContent = translations[currentLang]['fastest'];
           }
-        };
-
-        cancelBtn.onclick = function () {
-          autoRedirectEnabled = false;
-          clearTimeout(redirectTimer);
-          countdown.textContent = `${translations[currentLang]['cancelled']} ${fastestMirror.mirrorName} (${fastestMirror.time} ms)`;
-          cancelBtn.style.display = 'none';
-          goNowBtn.querySelector('span:last-child').textContent = `${translations[currentLang]['goToFastest']} ${fastestMirror.mirrorName}`;
-        };
-
-        refreshBtn.onclick = resetTest;
-
-        testResults = await Promise.all(mirrors.map(pingMirror));
-
-        // 为每个结果添加镜像名称
-        testResults.forEach(result => {
-          const el = document.getElementById(result.id);
-          if (el) {
-            result.mirrorName = el.title;
-          }
-        });
-
-        const fastest = testResults.filter(r => r.status === 'success').sort((a, b) => a.time - b.time)[0];
-        isTesting = false;
-        refreshBtn.disabled = false;
-        startRedirectCountdown(fastest);
+        }
       }
+    }
 
-      // 初始化语言切换
+    // 更新状态文本
+    function updateStatusTexts() {
+      const checkingElements = document.querySelectorAll('.mirror-status.checking [data-i18n="checking"]');
+      checkingElements.forEach(element => {
+        element.textContent = translations[currentLang]['checking'];
+      });
+      
+      const timeoutElements = document.querySelectorAll('.mirror-status.failed');
+      timeoutElements.forEach(element => {
+        element.textContent = translations[currentLang]['timeout'];
+      });
+    }
+
+    // 绑定事件
+    function bindEvents() {
+      // 语言切换
       document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           setLanguage(btn.dataset.lang);
         });
       });
+    }
 
-      // Start the test
-      runTest();
-    </script>
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
 
-    <span>
-    <h1 style="visibility: hidden; user-select: none">
-      {UWrss}
-      {UWrss_en}
-    </h1>
-    </span>
+  <span style="display: none;">
+    <!-- 一定要保留，用于自动化feed的模板 -->
+    <?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+<title>UWillno's Blog</title>
+<link>https://uwillno.com</link>
+<description>UWillno's Blog</description>
+<item>
+<title>RCC/QML在线加载器开发记录</title>
+<link>https://uwillno.com?blog=58</link>
+<pubDate>Wed, 17 Dec 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Bilibili必火推广测试</title>
+<link>https://uwillno.com?blog=57</link>
+<pubDate>Sat, 13 Dec 2025 00:00:00 GMT</pubDate>
+<category>测试</category>
+</item>
+<item>
+<title>Qt Markdown预览增强记录</title>
+<link>https://uwillno.com?blog=55</link>
+<pubDate>Fri, 12 Dec 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Xml异常处理记录</title>
+<link>https://uwillno.com?blog=56</link>
+<pubDate>Fri, 12 Dec 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>长沙游记</title>
+<link>https://uwillno.com?blog=54</link>
+<pubDate>Tue, 02 Dec 2025 00:00:00 GMT</pubDate>
+<category>游记</category>
+</item>
+<item>
+<title>Cloudflare Workers AI零成本实现AI摘要/功能</title>
+<link>https://uwillno.com?blog=53</link>
+<pubDate>Thu, 27 Nov 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Markdown解析测试</title>
+<link>https://uwillno.com?blog=test</link>
+<pubDate>Mon, 24 Nov 2025 00:00:00 GMT</pubDate>
+<category>测试</category>
+</item>
+<item>
+<title>Moto G100体验记录</title>
+<link>https://uwillno.com?blog=52</link>
+<pubDate>Wed, 29 Oct 2025 00:00:00 GMT</pubDate>
+<category>杂谈</category>
+</item>
+<item>
+<title>Qt渲染Spine记录</title>
+<link>https://uwillno.com?blog=51</link>
+<pubDate>Thu, 23 Oct 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>10400f 4060降压记录</title>
+<link>https://uwillno.com?blog=50</link>
+<pubDate>Mon, 29 Sep 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Qt for WebAssembly 错误处理记录</title>
+<link>https://uwillno.com?blog=49</link>
+<pubDate>Fri, 12 Sep 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>卡巴斯基JS误报分析</title>
+<link>https://uwillno.com?blog=48</link>
+<pubDate>Mon, 01 Sep 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Qt6.10Beta3 for wasm初体验</title>
+<link>https://uwillno.com?blog=47</link>
+<pubDate>Sun, 24 Aug 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>大文件（wasm）静态托管</title>
+<link>https://uwillno.com?blog=46</link>
+<pubDate>Mon, 04 Aug 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>瓶氧记录/管理系统开发记录</title>
+<link>https://uwillno.com?blog=45</link>
+<pubDate>Fri, 01 Aug 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>域名邮箱折腾记录</title>
+<link>https://uwillno.com?blog=44</link>
+<pubDate>Wed, 30 Jul 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>误启火绒USB控制导致WIN TO GO异常解决方案</title>
+<link>https://uwillno.com?blog=43</link>
+<pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Moto G75体验记录</title>
+<link>https://uwillno.com?blog=42</link>
+<pubDate>Wed, 02 Jul 2025 00:00:00 GMT</pubDate>
+<category>杂谈</category>
+</item>
+<item>
+<title>Uww2开发记录2</title>
+<link>https://uwillno.com?blog=41</link>
+<pubDate>Sun, 01 Jun 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>武汉移动光猫H60G改桥接 公网IPV6折腾</title>
+<link>https://uwillno.com?blog=40</link>
+<pubDate>Sun, 04 May 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Uww2开发记录</title>
+<link>https://uwillno.com?blog=39</link>
+<pubDate>Thu, 01 May 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Qt for Android 存储权限申请 2</title>
+<link>https://uwillno.com?blog=38</link>
+<pubDate>Thu, 10 Apr 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>记录&lt;&gt;导致markdown、xml异常处理</title>
+<link>https://uwillno.com?blog=37</link>
+<pubDate>Tue, 11 Mar 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>记录处理std::unique_ptr&lt;QWebSocket&gt;</title>
+<link>https://uwillno.com?blog=36</link>
+<pubDate>Tue, 11 Mar 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Qt for Android 存储权限申请</title>
+<link>https://uwillno.com?blog=35</link>
+<pubDate>Tue, 04 Mar 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Android/QT/QML WebView折腾</title>
+<link>https://uwillno.com?blog=34</link>
+<pubDate>Fri, 28 Feb 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>AX200蓝牙异常排查</title>
+<link>https://uwillno.com?blog=33</link>
+<pubDate>Tue, 14 Jan 2025 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>快开门压力容器（蒸压釜）实操题</title>
+<link>https://uwillno.com?blog=32</link>
+<pubDate>Mon, 30 Dec 2024 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>计划报废产品记录</title>
+<link>https://uwillno.com?blog=31</link>
+<pubDate>Fri, 06 Dec 2024 00:00:00 GMT</pubDate>
+<category>吐槽</category>
+</item>
+<item>
+<title>安卓锁机软件破解</title>
+<link>https://uwillno.com?blog=30</link>
+<pubDate>Tue, 19 Nov 2024 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>视频批量添加字幕</title>
+<link>https://uwillno.com?blog=29</link>
+<pubDate>Fri, 01 Nov 2024 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>AR眼镜雷鸟Air2折腾记录</title>
+<link>https://uwillno.com?blog=27</link>
+<pubDate>Sat, 26 Oct 2024 00:00:00 GMT</pubDate>
+<category>拔草</category>
+</item>
+<item>
+<title>Qt/C++与Java交互、JNI使用</title>
+<link>https://uwillno.com?blog=28</link>
+<pubDate>Sat, 26 Oct 2024 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>博客问题记录（WASM平台）</title>
+<link>https://uwillno.com?blog=logs</link>
+<pubDate>Sun, 20 Oct 2024 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Qt for WebAssembly中使用Qt/C++调用JavaScript实现路由</title>
+<link>https://uwillno.com?blog=26</link>
+<pubDate>Fri, 11 Oct 2024 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>AR眼镜/头戴显示器平替产品</title>
+<link>https://uwillno.com?blog=25</link>
+<pubDate>Wed, 09 Oct 2024 00:00:00 GMT</pubDate>
+<category>拔草</category>
+</item>
+<item>
+<title>上年纪了，不再搞机了</title>
+<link>https://uwillno.com?blog=23</link>
+<pubDate>Fri, 04 Oct 2024 00:00:00 GMT</pubDate>
+<category>杂谈</category>
+</item>
+<item>
+<title>Cloudflare Workers + R2实现简易评论系统</title>
+<link>https://uwillno.com?blog=22</link>
+<pubDate>Mon, 23 Sep 2024 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Qt for WebAssembly中使用MediaPlayer的问题记录</title>
+<link>https://uwillno.com?blog=17</link>
+<pubDate>Mon, 16 Sep 2024 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>大理游记</title>
+<link>https://uwillno.com?blog=16</link>
+<pubDate>Wed, 11 Sep 2024 00:00:00 GMT</pubDate>
+<category>游记</category>
+</item>
+<item>
+<title>Vlog功能说明</title>
+<link>https://uwillno.com?blog=15</link>
+<pubDate>Tue, 27 Aug 2024 00:00:00 GMT</pubDate>
+<category>功能说明</category>
+</item>
+<item>
+<title>弃坑功能说明</title>
+<link>https://uwillno.com?blog=14</link>
+<pubDate>Mon, 29 Jul 2024 00:00:00 GMT</pubDate>
+<category>功能说明</category>
+</item>
+<item>
+<title>CMake/QMake着色器文件自动生成</title>
+<link>https://uwillno.com?blog=13</link>
+<pubDate>Fri, 05 Jul 2024 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Qt压缩资源文件，远程加载资源文件、翻译</title>
+<link>https://uwillno.com?blog=12</link>
+<pubDate>Fri, 17 May 2024 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>折腾QSettings::WebIndexedDBFormat/JSPI记录</title>
+<link>https://uwillno.com?blog=11</link>
+<pubDate>Thu, 16 May 2024 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>皇极经世的功能说明</title>
+<link>https://uwillno.com?blog=10</link>
+<pubDate>Mon, 01 Apr 2024 00:00:00 GMT</pubDate>
+<category>功能说明</category>
+</item>
+<item>
+<title>Qt for Webassembly QML文本选中、复制</title>
+<link>https://uwillno.com?blog=9</link>
+<pubDate>Wed, 10 Jan 2024 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>QML Image加载远程图片- server replied: Forbidden</title>
+<link>https://uwillno.com?blog=8</link>
+<pubDate>Mon, 08 Jan 2024 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>QHttpServer设置允许跨域请求</title>
+<link>https://uwillno.com?blog=7</link>
+<pubDate>Tue, 31 Oct 2023 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>关于写的一些垃圾课设/毕设</title>
+<link>https://uwillno.com?blog=6</link>
+<pubDate>Fri, 22 Sep 2023 00:00:00 GMT</pubDate>
+<category>杂谈</category>
+</item>
+<item>
+<title>六爻功能说明</title>
+<link>https://uwillno.com?blog=5</link>
+<pubDate>Sat, 12 Aug 2023 00:00:00 GMT</pubDate>
+<category>功能说明</category>
+</item>
+<item>
+<title>软考经历吐槽</title>
+<link>https://uwillno.com?blog=19</link>
+<pubDate>Wed, 21 Jun 2023 00:00:00 GMT</pubDate>
+<category>吐槽</category>
+</item>
+<item>
+<title>教育经历吐槽</title>
+<link>https://uwillno.com?blog=18</link>
+<pubDate>Tue, 20 Jun 2023 00:00:00 GMT</pubDate>
+<category>吐槽</category>
+</item>
+<item>
+<title>ReferenceError: SharedArrayBuffer is not defined</title>
+<link>https://uwillno.com?blog=4</link>
+<pubDate>Tue, 23 May 2023 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Uwzz原理补全</title>
+<link>https://uwillno.com?blog=2</link>
+<pubDate>Mon, 22 May 2023 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Linux下Qt creator中文输入问题</title>
+<link>https://uwillno.com?blog=3</link>
+<pubDate>Mon, 22 May 2023 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>Arch Linux系统迁移</title>
+<link>https://uwillno.com?blog=1</link>
+<pubDate>Mon, 22 May 2023 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
+<title>农历</title>
+<link>https://uwillno.com?func=lunar</link>
+</item>
+<item>
+<title>六爻</title>
+<link>https://uwillno.com?func=6yao</link>
+</item>
+<item>
+<title>六壬</title>
+<link>https://uwillno.com?func=6ren</link>
+</item>
+<item>
+<title>皇极经世</title>
+<link>https://uwillno.com?func=hjjs</link>
+</item>
+<item>
+<title>AES</title>
+<link>https://uwillno.com?func=aes</link>
+</item>
+<item>
+<title>HTML编辑</title>
+<link>https://uwillno.com?func=htmleditor</link>
+</item>
+<item>
+<title>图片拼接</title>
+<link>https://uwillno.com?func=imagestitching</link>
+</item>
+<item>
+<title>文本编辑</title>
+<link>https://uwillno.com?func=texteditor</link>
+</item>
+<item>
+<title>天纪笔记</title>
+<link>https://uwillno.com?func=tj</link>
+</item>
+<item>
+<title>卡巴斯基密码管理器：txt转csv</title>
+<link>https://uwillno.com?func=kpm</link>
+</item>
+<item>
+<title>身份验证器</title>
+<link>https://uwillno.com?func=otp</link>
+</item>
+<item>
+<title>二维码</title>
+<link>https://uwillno.com?func=qr</link>
+</item>
+<item>
+<title>WebSocket</title>
+<link>https://uwillno.com?func=ws</link>
+</item>
+<item>
+<title>水印相机</title>
+<link>https://uwillno.com?func=watermark</link>
+</item>
+<item>
+<title>周期排班推理</title>
+<link>https://uwillno.com?func=pba</link>
+</item>
+<item>
+<title>个人排班查询</title>
+<link>https://uwillno.com?func=pb</link>
+</item>
+<item>
+<title>紫微斗数</title>
+<link>https://uwillno.com?func=zwds</link>
+</item>
+<item>
+<title>Spine查看器</title>
+<link>https://uwillno.com?func=spine</link>
+</item>
+<item>
+<title>代码统计</title>
+<link>https://uwillno.com?about=cloc</link>
+</item>
+<item>
+<title>变更日志</title>
+<link>https://uwillno.com?about=changelog</link>
+</item>
+<item>
+<title>引用、源码、额外</title>
+<link>https://uwillno.com?about=reference</link>
+</item>
+<item>
+<title>程序常见问题</title>
+<link>https://uwillno.com?about=programfaq</link>
+</item>
+<item>
+<title>建站历史</title>
+<link>https://uwillno.com?about=history</link>
+</item>
+<item>
+<title>留言</title>
+<link>https://uwillno.com?about=message</link>
+</item>
+<item>
+<title>简介</title>
+<link>https://uwillno.com?about=bio</link>
+</item>
+<item>
+<title>设备</title>
+<link>https://uwillno.com?about=devices</link>
+</item>
+<item>
+<title>标签采样</title>
+<link>https://uwillno.com?about=label</link>
+</item>
+<item>
+<title>娱乐</title>
+<link>https://uwillno.com?about=entertainment</link>
+</item>
+<item>
+<title>成绩</title>
+<link>https://uwillno.com?about=transcript</link>
+</item>
+<item>
+<title>rss</title>
+<link>https://uwillno.com?rss</link>
+</item>
+<item>
+<title>记录</title>
+<link>https://uwillno.com?blog</link>
+</item>
+<item>
+<title>时刻</title>
+<link>https://uwillno.com?moment</link>
+</item>
+<item>
+<title>功能</title>
+<link>https://uwillno.com?func</link>
+</item>
+<item>
+<title>关于</title>
+<link>https://uwillno.com?about</link>
+</item>
+<item>
+<title>友链</title>
+<link>https://uwillno.com?links</link>
+</item>
+</channel>
+</rss>
+    <?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+<title>UWillno's Blog</title>
+<link>https://uwillno.com</link>
+<description>UWillno's Blog</description>
+<item>
+<title>RCC/QML online loader development record</title>
+<link>https://uwillno.com?blog=58</link>
+<pubDate>Wed, 17 Dec 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Bilibili Promotion Test</title>
+<link>https://uwillno.com?blog=57</link>
+<pubDate>Sat, 13 Dec 2025 00:00:00 GMT</pubDate>
+<category>Test</category>
+</item>
+<item>
+<title>Qt Markdown preview enhancement record</title>
+<link>https://uwillno.com?blog=55</link>
+<pubDate>Fri, 12 Dec 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>XML Exception Handling Log</title>
+<link>https://uwillno.com?blog=56</link>
+<pubDate>Fri, 12 Dec 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Changsha Travel Notes</title>
+<link>https://uwillno.com?blog=54</link>
+<pubDate>Tue, 02 Dec 2025 00:00:00 GMT</pubDate>
+<category>Travel notes</category>
+</item>
+<item>
+<title>Cloudflare Workers AI implements AI summaries/features at zero cost</title>
+<link>https://uwillno.com?blog=53</link>
+<pubDate>Thu, 27 Nov 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Markdown parsing test</title>
+<link>https://uwillno.com?blog=test</link>
+<pubDate>Mon, 24 Nov 2025 00:00:00 GMT</pubDate>
+<category>Test</category>
+</item>
+<item>
+<title>Moto G100 experience record</title>
+<link>https://uwillno.com?blog=52</link>
+<pubDate>Wed, 29 Oct 2025 00:00:00 GMT</pubDate>
+<category>Miscellaneous talk</category>
+</item>
+<item>
+<title>Qt renders Spine records</title>
+<link>https://uwillno.com?blog=51</link>
+<pubDate>Thu, 23 Oct 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>10400f 4060 Voltage reduction recording</title>
+<link>https://uwillno.com?blog=50</link>
+<pubDate>Mon, 29 Sep 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Qt for WebAssembly Error Handling Records</title>
+<link>https://uwillno.com?blog=49</link>
+<pubDate>Fri, 12 Sep 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Kaspersky JS false positive analysis</title>
+<link>https://uwillno.com?blog=48</link>
+<pubDate>Mon, 01 Sep 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Qt6.10Beta3 for wasm first experience</title>
+<link>https://uwillno.com?blog=47</link>
+<pubDate>Sun, 24 Aug 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Large file (wasm) static hosting</title>
+<link>https://uwillno.com?blog=46</link>
+<pubDate>Mon, 04 Aug 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Oxygen recording/management system development record</title>
+<link>https://uwillno.com?blog=45</link>
+<pubDate>Fri, 01 Aug 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Domain name mailbox toss record</title>
+<link>https://uwillno.com?blog=44</link>
+<pubDate>Wed, 30 Jul 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Solution to WIN TO GO exception caused by mistake by turning on the Huorong USB control</title>
+<link>https://uwillno.com?blog=43</link>
+<pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Moto G75 experience record</title>
+<link>https://uwillno.com?blog=42</link>
+<pubDate>Wed, 02 Jul 2025 00:00:00 GMT</pubDate>
+<category>Miscellaneous talk</category>
+</item>
+<item>
+<title>Uww2 Development Record2</title>
+<link>https://uwillno.com?blog=41</link>
+<pubDate>Sun, 01 Jun 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Wuhan mobile optical cat H60G change bridge public network IPV6 tossing</title>
+<link>https://uwillno.com?blog=40</link>
+<pubDate>Sun, 04 May 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Uww2 Development Record</title>
+<link>https://uwillno.com?blog=39</link>
+<pubDate>Thu, 01 May 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Qt for Android Storage Permission Application 2</title>
+<link>https://uwillno.com?blog=38</link>
+<pubDate>Thu, 10 Apr 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Record&lt;&gt; causes markdown and xml to exceptions</title>
+<link>https://uwillno.com?blog=37</link>
+<pubDate>Tue, 11 Mar 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Record processing std::unique_ptr&lt;QWebSocket&gt;</title>
+<link>https://uwillno.com?blog=36</link>
+<pubDate>Tue, 11 Mar 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Qt for Android Storage Permission Application</title>
+<link>https://uwillno.com?blog=35</link>
+<pubDate>Tue, 04 Mar 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Some issues with Android/QT/QML WebView</title>
+<link>https://uwillno.com?blog=34</link>
+<pubDate>Fri, 28 Feb 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Troubleshooting AX200 Bluetooth anomalies</title>
+<link>https://uwillno.com?blog=33</link>
+<pubDate>Tue, 14 Jan 2025 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Quick opening pressure vessel (autoclave) practical questions</title>
+<link>https://uwillno.com?blog=32</link>
+<pubDate>Mon, 30 Dec 2024 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Planned obsolescence product records</title>
+<link>https://uwillno.com?blog=31</link>
+<pubDate>Fri, 06 Dec 2024 00:00:00 GMT</pubDate>
+<category>Complaints</category>
+</item>
+<item>
+<title>Android lock software crack</title>
+<link>https://uwillno.com?blog=30</link>
+<pubDate>Tue, 19 Nov 2024 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Add subtitles to videos in batches</title>
+<link>https://uwillno.com?blog=29</link>
+<pubDate>Fri, 01 Nov 2024 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>AR glasses Thunderbird Air2 toss record</title>
+<link>https://uwillno.com?blog=27</link>
+<pubDate>Sat, 26 Oct 2024 00:00:00 GMT</pubDate>
+<category>Moved on</category>
+</item>
+<item>
+<title>Qt/C++ interacts with Java and uses JNI</title>
+<link>https://uwillno.com?blog=28</link>
+<pubDate>Sat, 26 Oct 2024 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Blog issue record (WASM platform)</title>
+<link>https://uwillno.com?blog=logs</link>
+<pubDate>Sun, 20 Oct 2024 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Using Qt/C++ to call JavaScript to implement routing in Qt for WebAssembly</title>
+<link>https://uwillno.com?blog=26</link>
+<pubDate>Fri, 11 Oct 2024 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>AR glasses/head-mounted display replacement products</title>
+<link>https://uwillno.com?blog=25</link>
+<pubDate>Wed, 09 Oct 2024 00:00:00 GMT</pubDate>
+<category>Moved on</category>
+</item>
+<item>
+<title>As I get older, I no longer mess with devices.</title>
+<link>https://uwillno.com?blog=23</link>
+<pubDate>Fri, 04 Oct 2024 00:00:00 GMT</pubDate>
+<category>Miscellaneous talk</category>
+</item>
+<item>
+<title>Cloudflare Workers + R2 implements a simple comment system</title>
+<link>https://uwillno.com?blog=22</link>
+<pubDate>Mon, 23 Sep 2024 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Problem records using MediaPlayer in Qt for WebAssembly</title>
+<link>https://uwillno.com?blog=17</link>
+<pubDate>Mon, 16 Sep 2024 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Dali Travel Notes</title>
+<link>https://uwillno.com?blog=16</link>
+<pubDate>Wed, 11 Sep 2024 00:00:00 GMT</pubDate>
+<category>Travel notes</category>
+</item>
+<item>
+<title>Vlog function description</title>
+<link>https://uwillno.com?blog=15</link>
+<pubDate>Tue, 27 Aug 2024 00:00:00 GMT</pubDate>
+<category>Function Description</category>
+</item>
+<item>
+<title>Abandonment function description</title>
+<link>https://uwillno.com?blog=14</link>
+<pubDate>Mon, 29 Jul 2024 00:00:00 GMT</pubDate>
+<category>Function Description</category>
+</item>
+<item>
+<title>CMake/QMake shader files are automatically generated</title>
+<link>https://uwillno.com?blog=13</link>
+<pubDate>Fri, 05 Jul 2024 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Qt compresses resource files, remotely loads resource files, and translates</title>
+<link>https://uwillno.com?blog=12</link>
+<pubDate>Fri, 17 May 2024 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Fiddle with QSettings::WebIndexedDBFormat/JSPI records</title>
+<link>https://uwillno.com?blog=11</link>
+<pubDate>Thu, 16 May 2024 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Function description of Huangji Jingshi</title>
+<link>https://uwillno.com?blog=10</link>
+<pubDate>Mon, 01 Apr 2024 00:00:00 GMT</pubDate>
+<category>Function Description</category>
+</item>
+<item>
+<title>Qt for Webassembly QML text selection and copy</title>
+<link>https://uwillno.com?blog=9</link>
+<pubDate>Wed, 10 Jan 2024 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>QML Image loads remote images - server replied: Forbidden</title>
+<link>https://uwillno.com?blog=8</link>
+<pubDate>Mon, 08 Jan 2024 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>QHttpServer settings allow cross-domain requests</title>
+<link>https://uwillno.com?blog=7</link>
+<pubDate>Tue, 31 Oct 2023 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>About writing some rubbish course plans/graduation plans</title>
+<link>https://uwillno.com?blog=6</link>
+<pubDate>Fri, 22 Sep 2023 00:00:00 GMT</pubDate>
+<category>Miscellaneous talk</category>
+</item>
+<item>
+<title>Six Yao function description</title>
+<link>https://uwillno.com?blog=5</link>
+<pubDate>Sat, 12 Aug 2023 00:00:00 GMT</pubDate>
+<category>Function Description</category>
+</item>
+<item>
+<title>Complaints about soft exam experience</title>
+<link>https://uwillno.com?blog=19</link>
+<pubDate>Wed, 21 Jun 2023 00:00:00 GMT</pubDate>
+<category>Complaints</category>
+</item>
+<item>
+<title>Complaints about Educational Experience</title>
+<link>https://uwillno.com?blog=18</link>
+<pubDate>Tue, 20 Jun 2023 00:00:00 GMT</pubDate>
+<category>Complaints</category>
+</item>
+<item>
+<title>ReferenceError: SharedArrayBuffer is not defined</title>
+<link>https://uwillno.com?blog=4</link>
+<pubDate>Tue, 23 May 2023 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Uwzz principle completion</title>
+<link>https://uwillno.com?blog=2</link>
+<pubDate>Mon, 22 May 2023 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Qt creator Chinese input problem under Linux</title>
+<link>https://uwillno.com?blog=3</link>
+<pubDate>Mon, 22 May 2023 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Arch Linux system migration</title>
+<link>https://uwillno.com?blog=1</link>
+<pubDate>Mon, 22 May 2023 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
+<title>Lunar</title>
+<link>https://uwillno.com?func=lunar</link>
+</item>
+<item>
+<title>6yao</title>
+<link>https://uwillno.com?func=6yao</link>
+</item>
+<item>
+<title>6ren</title>
+<link>https://uwillno.com?func=6ren</link>
+</item>
+<item>
+<title>HJJS</title>
+<link>https://uwillno.com?func=hjjs</link>
+</item>
+<item>
+<title>AES</title>
+<link>https://uwillno.com?func=aes</link>
+</item>
+<item>
+<title>HTML Editor</title>
+<link>https://uwillno.com?func=htmleditor</link>
+</item>
+<item>
+<title>Image stitching</title>
+<link>https://uwillno.com?func=imagestitching</link>
+</item>
+<item>
+<title>Text Editor</title>
+<link>https://uwillno.com?func=texteditor</link>
+</item>
+<item>
+<title>Tianji Notes</title>
+<link>https://uwillno.com?func=tj</link>
+</item>
+<item>
+<title>KPM: txt to csv</title>
+<link>https://uwillno.com?func=kpm</link>
+</item>
+<item>
+<title>Authenticator</title>
+<link>https://uwillno.com?func=otp</link>
+</item>
+<item>
+<title>QR code</title>
+<link>https://uwillno.com?func=qr</link>
+</item>
+<item>
+<title>WebSocket</title>
+<link>https://uwillno.com?func=ws</link>
+</item>
+<item>
+<title>Watermark Camera</title>
+<link>https://uwillno.com?func=watermark</link>
+</item>
+<item>
+<title>Periodic shift reasoning</title>
+<link>https://uwillno.com?func=pba</link>
+</item>
+<item>
+<title>Personal shift inquiry</title>
+<link>https://uwillno.com?func=pb</link>
+</item>
+<item>
+<title>Predict fate through stars</title>
+<link>https://uwillno.com?func=zwds</link>
+</item>
+<item>
+<title>Spine viewer</title>
+<link>https://uwillno.com?func=spine</link>
+</item>
+<item>
+<title>Cloc</title>
+<link>https://uwillno.com?about=cloc</link>
+</item>
+<item>
+<title>Changelog</title>
+<link>https://uwillno.com?about=changelog</link>
+</item>
+<item>
+<title>Reference, Source, Additional</title>
+<link>https://uwillno.com?about=reference</link>
+</item>
+<item>
+<title>ProgramFAQ</title>
+<link>https://uwillno.com?about=programfaq</link>
+</item>
+<item>
+<title>History</title>
+<link>https://uwillno.com?about=history</link>
+</item>
+<item>
+<title>Message</title>
+<link>https://uwillno.com?about=message</link>
+</item>
+<item>
+<title>Bio</title>
+<link>https://uwillno.com?about=bio</link>
+</item>
+<item>
+<title>Devices</title>
+<link>https://uwillno.com?about=devices</link>
+</item>
+<item>
+<title>Label</title>
+<link>https://uwillno.com?about=label</link>
+</item>
+<item>
+<title>Entertainment</title>
+<link>https://uwillno.com?about=entertainment</link>
+</item>
+<item>
+<title>Transcript</title>
+<link>https://uwillno.com?about=transcript</link>
+</item>
+<item>
+<title>rss</title>
+<link>https://uwillno.com?rss</link>
+</item>
+<item>
+<title>Logs</title>
+<link>https://uwillno.com?blog</link>
+</item>
+<item>
+<title>Moment</title>
+<link>https://uwillno.com?moment</link>
+</item>
+<item>
+<title>Functions</title>
+<link>https://uwillno.com?func</link>
+</item>
+<item>
+<title>About</title>
+<link>https://uwillno.com?about</link>
+</item>
+<item>
+<title>Links</title>
+<link>https://uwillno.com?links</link>
+</item>
+</channel>
+</rss>
+  </span>
 
 </body>
+
 </html>
