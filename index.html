@@ -9,7 +9,7 @@
   <meta name="description" content="UWillno的博客,UWillno's Blog">
   <meta name="copyright" content="UWillno">
   <meta name="robots" content="all">
-  <title>选择镜像</title>
+  <title data-i18n="title">UWillno的博客</title>
   <style>
     :root {
       --primary-bg: #f5f7fa;
@@ -347,9 +347,9 @@
       z-index: 2;
     }
 
-    .reorder-animation {
+    /* .reorder-animation {
       transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    } */
 
     footer {
       text-align: center;
@@ -432,13 +432,15 @@
         'pageTitle': '选择镜像',
         'checking': '检测中...',
         'timeout': '超时',
-        'fastest': '最快'
+        'fastest': '最快',
+        "title": "UWillno的博客"
       },
       'en': {
         'pageTitle': 'Select Mirror',
         'checking': 'Checking...',
         'timeout': 'Timeout',
-        'fastest': 'Fastest'
+        'fastest': 'Fastest',
+        "title": "UWillno's Blog"
       }
     };
 
@@ -508,16 +510,22 @@
     let testPromises = [];
 
     // 辅助函数：检测是否是图片URL
+    // function isImageUrl(str) {
+    //   return typeof str === 'string' &&
+    //     (str.startsWith('http') ||
+    //       /\.(svg|png|jpg|jpeg|gif|webp)$/i.test(str));
+    // }
     function isImageUrl(str) {
       return typeof str === 'string' &&
-        (str.startsWith('http') ||
-          /\.(svg|png|jpg|jpeg|gif|webp)$/i.test(str));
+        /\.(svg|png|jpg|jpeg|gif|webp)$/i.test(str);
     }
+
 
     // 辅助函数：检测是否是SVG字符串
     function isSvgString(str) {
       return typeof str === 'string' && str.trim().startsWith('<svg');
     }
+
 
     // 生成图标HTML
     function generateIconHTML(icon, name) {
@@ -545,19 +553,19 @@
       const container = document.getElementById('mirrors-container');
       const cards = Array.from(container.children);
       const targetCard = document.getElementById(cardId);
-      
+
       if (!targetCard) return;
-      
+
       // 移除动画类
       targetCard.classList.remove('reorder-animation');
-      
+
       // 获取当前索引和目标索引
       const currentIndex = cards.findIndex(card => card.id === cardId);
-      
+
       if (currentIndex !== -1 && currentIndex !== position) {
         // 添加动画类
         targetCard.classList.add('reorder-animation');
-        
+
         // 移动卡片
         if (position >= cards.length) {
           container.appendChild(targetCard);
@@ -567,7 +575,7 @@
           const referenceCard = cards[position];
           container.insertBefore(targetCard, referenceCard);
         }
-        
+
         // 动画完成后移除动画类
         setTimeout(() => {
           targetCard.classList.remove('reorder-animation');
@@ -579,46 +587,50 @@
     function updateCardsPosition() {
       // 创建一个数组，包含所有已测试和未测试的卡片
       const allCards = Array.from(document.querySelectorAll('.mirror-card'));
-      
+
       // 获取已完成的测试结果（按时间排序）
       const completedTests = testResults.filter(r => r.time !== null);
       const sortedCompleted = [...completedTests].sort((a, b) => a.time - b.time);
-      
+
       // 获取正在测试中的卡片
       const testingCards = allCards.filter(card => card.classList.contains('checking'));
-      
+
       // 获取测试失败的卡片
       const failedCards = allCards.filter(card => card.classList.contains('failed'));
-      
+
       // 计算每个卡片应该的位置
       const positionMap = {};
-      
+
       // 1. 放置最快标记（如果有）
       if (fastestMirror) {
         positionMap[fastestMirror.id] = 0;
       }
-      
+
       // 2. 放置其他已完成的卡片（按时间排序）
       let currentPosition = fastestMirror ? 1 : 0;
       for (const result of sortedCompleted) {
         if (result.id === fastestMirror?.id) continue;
         positionMap[result.id] = currentPosition++;
       }
-      
+
       // 3. 放置正在测试中的卡片
       for (const card of testingCards) {
-        if (!positionMap[card.id]) {
+        // if (!positionMap[card.id]) {
+        //   positionMap[card.id] = currentPosition++;
+        // }
+        if (!(card.id in positionMap)) {
           positionMap[card.id] = currentPosition++;
         }
+
       }
-      
+
       // 4. 放置失败的卡片
       for (const card of failedCards) {
         if (!positionMap[card.id]) {
           positionMap[card.id] = currentPosition++;
         }
       }
-      
+
       // 应用位置调整
       for (const [cardId, position] of Object.entries(positionMap)) {
         moveCardToPosition(cardId, position);
@@ -629,37 +641,44 @@
     async function testSingleMirror(mirror) {
       const card = document.getElementById(mirror.id);
       if (!card) return { ...mirror, time: null, status: 'failed' };
-      
+
       const start = performance.now();
-      
+
       try {
         // 使用 Promise.race 实现超时控制
         const timeoutPromise = new Promise((_, reject) => {
           setTimeout(() => reject(new Error('timeout')), 5000);
         });
-        
+
         const fetchPromise = fetch(mirror.url + '/__ping__.txt?_=' + Math.random(), {
-          method: 'HEAD',
+          // method: 'HEAD',
+          method: 'GET',
           mode: 'no-cors',
           cache: 'no-store'
         });
-        
+
         await Promise.race([fetchPromise, timeoutPromise]);
-        
+
         const time = Math.round(performance.now() - start);
-        
+
         // 更新卡片状态
         card.classList.remove('checking', 'failed');
         card.classList.add(getColorClassByTime(time));
-        
+
         const statusElement = card.querySelector('.mirror-status');
         if (statusElement) {
           statusElement.className = `mirror-status ${getColorClassByTime(time)}`;
           statusElement.textContent = time + 'ms';
-          
+
           // 检查是否为当前最快
-          const currentFastest = testResults.find(r => r.status === 'success' && r.time);
-          if (!currentFastest || time < currentFastest.time) {
+          // const currentFastest = testResults.find(r => r.status === 'success' && r.time);
+          // if (!currentFastest || time < currentFastest.time) {
+          const fastest = testResults
+            .filter(r => r.status === 'success' && r.time !== null)
+            .reduce((min, r) => min === null || r.time < min.time ? r : min, null);
+
+          if (!fastest || time < fastest.time) {
+
             // 移除之前的最快标记
             if (fastestMirror) {
               const fastestCard = document.getElementById(fastestMirror.id);
@@ -668,10 +687,10 @@
                 if (badge) badge.remove();
               }
             }
-            
+
             // 设置新的最快镜像
             fastestMirror = { ...mirror, time };
-            
+
             // 添加最快标记
             const badge = document.createElement('div');
             badge.className = 'fastest-badge';
@@ -679,21 +698,21 @@
             card.appendChild(badge);
           }
         }
-        
+
         // 返回结果
         return { ...mirror, time, status: 'success' };
-        
+
       } catch (error) {
         // 测试失败
         card.classList.remove('checking');
         card.classList.add('failed');
-        
+
         const statusElement = card.querySelector('.mirror-status');
         if (statusElement) {
           statusElement.className = 'mirror-status failed';
           statusElement.textContent = translations[currentLang]['timeout'];
         }
-        
+
         return { ...mirror, time: null, status: 'failed' };
       }
     }
@@ -739,7 +758,8 @@
         // 添加点击事件
         card.addEventListener('click', () => {
           const queryParams = window.location.search;
-          window.open(mirror.url + queryParams, '_blank');
+          // window.open(mirror.url + queryParams, '_blank');
+          location.href = mirror.url + queryParams;
         });
 
         container.appendChild(card);
@@ -763,13 +783,14 @@
           } else {
             testResults.push(result);
           }
-          
+
           // 更新卡片位置
-          updateCardsPosition();
-          
+          // updateCardsPosition();
+          scheduleReorder();
+
           return result;
         });
-        
+
         testPromises.push(testPromise);
       });
     }
@@ -777,7 +798,10 @@
     // 切换语言函数
     function setLanguage(lang) {
       currentLang = lang;
-
+      const titleEl = document.querySelector('title[data-i18n]');
+      if (titleEl) {
+        document.title = translations[lang][titleEl.dataset.i18n];
+      }
       // 更新语言按钮状态
       document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.lang === lang);
@@ -817,7 +841,7 @@
       checkingElements.forEach(element => {
         element.textContent = translations[currentLang]['checking'];
       });
-      
+
       const timeoutElements = document.querySelectorAll('.mirror-status.failed');
       timeoutElements.forEach(element => {
         element.textContent = translations[currentLang]['timeout'];
@@ -833,6 +857,16 @@
         });
       });
     }
+    let reorderScheduled = false;
+
+    function scheduleReorder() {
+      if (reorderScheduled) return;
+      reorderScheduled = true;
+      requestAnimationFrame(() => {
+        updateCardsPosition();
+        reorderScheduled = false;
+      });
+    }
 
     // 页面加载完成后初始化
     document.addEventListener('DOMContentLoaded', init);
@@ -846,6 +880,12 @@
 <title>UWillno's Blog</title>
 <link>https://uwillno.com</link>
 <description>UWillno's Blog</description>
+<item>
+<title>博客评论系统“负”优化之前端校验与邮件发送</title>
+<link>https://uwillno.com?blog=60</link>
+<pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
 <item>
 <title>博客安卓版开发记录</title>
 <link>https://uwillno.com?blog=59</link>
@@ -865,14 +905,14 @@
 <category>测试</category>
 </item>
 <item>
-<title>Qt Markdown预览增强记录</title>
-<link>https://uwillno.com?blog=55</link>
+<title>Xml异常处理记录</title>
+<link>https://uwillno.com?blog=56</link>
 <pubDate>Fri, 12 Dec 2025 00:00:00 GMT</pubDate>
 <category>技术</category>
 </item>
 <item>
-<title>Xml异常处理记录</title>
-<link>https://uwillno.com?blog=56</link>
+<title>Qt Markdown预览增强记录</title>
+<link>https://uwillno.com?blog=55</link>
 <pubDate>Fri, 12 Dec 2025 00:00:00 GMT</pubDate>
 <category>技术</category>
 </item>
@@ -1343,6 +1383,12 @@
 <link>https://uwillno.com</link>
 <description>UWillno's Blog</description>
 <item>
+<title>Blog comment system &quot;negative&quot; optimization front-end verification and email sending</title>
+<link>https://uwillno.com?blog=60</link>
+<pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
 <title>Blog Android version development record</title>
 <link>https://uwillno.com?blog=59</link>
 <pubDate>Fri, 26 Dec 2025 00:00:00 GMT</pubDate>
@@ -1361,14 +1407,14 @@
 <category>Test</category>
 </item>
 <item>
-<title>Qt Markdown preview enhancement record</title>
-<link>https://uwillno.com?blog=55</link>
+<title>XML Exception Handling Log</title>
+<link>https://uwillno.com?blog=56</link>
 <pubDate>Fri, 12 Dec 2025 00:00:00 GMT</pubDate>
 <category>Technology</category>
 </item>
 <item>
-<title>XML Exception Handling Log</title>
-<link>https://uwillno.com?blog=56</link>
+<title>Qt Markdown preview enhancement record</title>
+<link>https://uwillno.com?blog=55</link>
 <pubDate>Fri, 12 Dec 2025 00:00:00 GMT</pubDate>
 <category>Technology</category>
 </item>
