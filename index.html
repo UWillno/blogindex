@@ -2,41 +2,64 @@
 <meta charset="utf-8">
 <title>Uwilno's Blog</title>
 <script>
-const mirrors = [
-  "https://github.uwillno.com",
-  "https://vercel.uwillno.com",
-  "https://cloudflare.uwillno.com",
-  "https://edgeone.uwillno.com",
-  "https://netlify.uwillno.com",
-  "https://azure.uwillno.com",
-  "https://ipv6.uwillno.com:9102",
-  "https://tunnel.uwillno.com"
-];
+  const MIRRORS = [
+    // 推荐把“最可能直连成功”的放前面
+    "https://ipv6.uwillno.com:9102",
+    "https://cloudflare.uwillno.com",
+    "https://edgeone.uwillno.com",
+    "https://vercel.uwillno.com",
+    "https://github.uwillno.com",
+    "https://netlify.uwillno.com",
+    "https://azure.uwillno.com",
+    "https://tunnel.uwillno.com"
+  ];
 
-const TIMEOUT = 4000;
-let done = false;
+  // 参数：为大陆网络定的
+  const PROBE_PATH = "/blog01.wasm";
+  const RANGE = "bytes=0-32767"; // 32KB
+  const TIMEOUT = 900;           // ms
+  const CONCURRENCY = 3;
 
-function ping(url){
-  return Promise.race([
-    fetch(url + "/__ping__.txt?_=" + Math.random(), {
-      mode: "no-cors",
-      cache: "no-store"
-    }).then(() => url),
-    new Promise(r => setTimeout(r, TIMEOUT))
-  ]);
-}
+  let jumped = false;
+  const ctrls = [];
 
-mirrors.forEach(url => {
-  ping(url).then(hit => {
-    if(hit && !done){
-      done = true;
-      location.replace(hit + location.search);
-    }
+  function probe(base) {
+    const ctrl = new AbortController();
+    ctrls.push(ctrl);
+
+    const timer = setTimeout(() => ctrl.abort(), TIMEOUT);
+
+    return fetch(base + PROBE_PATH + "?_=" + Math.random(), {
+      method: "GET",
+      cache: "no-store",
+      headers: {
+        Range: RANGE,
+        Accept: "*/*"
+      },
+      signal: ctrl.signal
+    }).then(r => {
+      clearTimeout(timer);
+      // 206 = 正常 Range，200 = 某些 CDN 不支持 Range
+      if (r.status === 206 || r.status === 200) {
+        return base;
+      }
+      return Promise.reject();
+    });
+  }
+
+  // 只并发前 N 个，避免大陆网络互相拖死
+  Promise.any(
+    MIRRORS.slice(0, CONCURRENCY).map(probe)
+  ).then(hit => {
+    if (jumped) return;
+    jumped = true;
+
+    // 立刻掐掉其他请求
+    ctrls.forEach(c => c.abort());
+
+    location.replace(hit + location.search);
+  }).catch(() => {
+    // 全灭：给一个确定的兜底（让用户自己开代理）
+    location.replace(MIRRORS[0] + location.search);
   });
-});
-
-// 兜底：8 秒还没跳，就让用户自己选（极少发生）
-setTimeout(() => {
-  if(!done) location.replace(mirrors[0] + location.search);
-}, 8000);
 </script>
