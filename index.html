@@ -1,113 +1,42 @@
 <!doctype html>
-<html>
-<head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>UWillno's Blog</title>
-</head>
-
-<body style="
-margin:0;
-background:#111;
-color:#ddd;
-font-family:system-ui,sans-serif;
-">
-
-<div style="
-max-inline-size:560px;
-margin:40px auto;
-padding:24px;
-line-height:1.7;
-text-align:start;
-">
-
-<h2 style="margin-block-start:0;">选择/Select</h2>
-
-<hr style="border:none;border-block-start:1px solid #333;">
-
-<div id="list">测速中.../Testing...</div>
-
-<hr style="border:none;border-block-start:1px solid #333;">
-<div style="
-margin:16px 0;
-font-size:14px;
-color:#aaa;
-">
-采用Qt/C++开发，WASM源文件近40MB（通常服务器会进行压缩），注意数据用量，延迟低不代表高速率，尽量开启代理工具。采用多线程构建，请使用支持SharedArrayBuffer的浏览器访问。<br>建议：FireFox >> Edge/Chorme(Chromium) >> Safari >> Others <br>
-Developed using Qt/C++, the WASM source file is nearly 40MB (usually compressed by the server). Pay attention to data usage. Low latency does not mean high speed. Try to enable the proxy tool. Built using multi-threading, please use a browser that supports SharedArrayBuffer to access. <br>Recommendation: FireFox >> Edge/Chorme(Chromium) >> Safari >> Others <br>
-</div>
-
-<footer style="margin-block-start:18px;font-size:12px;color:#777;">
-<a href="https://icp.gov.moe/?keyword=20249102"
-   target="_blank"
-   style="color:#888;text-decoration:none;">
-萌ICP备20249102号
-</a>
-</footer>
-
-</div>
-
+<title>Uwilno's Blog</title>
 <script>
 const mirrors = [
-  ["GitHub","https://github.uwillno.com"],
-  ["Vercel","https://vercel.uwillno.com"],
-  ["Cloudflare","https://cloudflare.uwillno.com"],
-  ["EdgeOne","https://edgeone.uwillno.com"],
-  ["Netlify","https://netlify.uwillno.com"],
-  ["Azure","https://azure.uwillno.com"],
-  ["IPv6","https://ipv6.uwillno.com:9102"],
-  ["Tunnel","https://tunnel.uwillno.com"]
+  "https://github.uwillno.com",
+  "https://vercel.uwillno.com",
+  "https://cloudflare.uwillno.com",
+  "https://edgeone.uwillno.com",
+  "https://netlify.uwillno.com",
+  "https://azure.uwillno.com",
+  "https://ipv6.uwillno.com:9102",
+  "https://tunnel.uwillno.com"
 ];
 
-function ping(url, timeout=4000){
-  const start = performance.now();
+const TIMEOUT = 4000;
+let done = false;
+
+function ping(url){
   return Promise.race([
     fetch(url + "/__ping__.txt?_=" + Math.random(), {
-      method:"GET",
-      mode:"no-cors",
-      cache:"no-store"
-    }),
-    new Promise((_,rej)=>setTimeout(rej,timeout))
-  ]).then(()=>Math.round(performance.now()-start))
-   .catch(()=>null);
+      mode: "no-cors",
+      cache: "no-store"
+    }).then(() => url),
+    new Promise(r => setTimeout(r, TIMEOUT))
+  ]);
 }
 
-async function run(){
-  const results = [];
-  for(const m of mirrors){
-    const t = await ping(m[1]);
-    results.push({name:m[0],url:m[1],time:t});
-    render(results);
-  }
-}
-
-function render(arr){
-  arr.sort((a,b)=>{
-    if(a.time===null) return 1;
-    if(b.time===null) return -1;
-    return a.time-b.time;
+mirrors.forEach(url => {
+  ping(url).then(hit => {
+    if(hit && !done){
+      done = true;
+      location.replace(hit + location.search);
+    }
   });
+});
 
-  let html = "";
-
-  arr.forEach((m,i)=>{
-    const label =
-      m.time===null ? "timeout" :
-      i===0 ? m.time+" ms  fastest" :
-      m.time+" ms";
-
-    html += `<div style="margin:10px 0;">
-      <a href="${m.url}${location.search}"
-         style="color:#7aa2ff;text-decoration:none;">
-        ${m.name}
-      </a>
-      <span style="color:#888;"> — ${label}</span>
-    </div>`;
-  });
-
-  document.getElementById("list").innerHTML = html;
-}
-run();
+// 兜底：8 秒还没跳，就让用户自己选（极少发生）
+setTimeout(() => {
+  if(!done) location.replace(mirrors[0] + location.search);
+}, 8000);
 </script>
-</body>
-</html>
