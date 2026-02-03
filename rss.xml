@@ -5,6 +5,12 @@
 <link>https://uwillno.com</link>
 <description>UWillno's Blog</description>
 <item>
+<title>WASM博客静态托管加速探索</title>
+<link>https://uwillno.com?blog=69</link>
+<pubDate>Tue, 03 Feb 2026 00:00:00 GMT</pubDate>
+<category>技术</category>
+</item>
+<item>
 <title>修改QML文本控件的超链接颜色</title>
 <link>https://uwillno.com?blog=68</link>
 <pubDate>Sun, 01 Feb 2026 00:00:00 GMT</pubDate>
@@ -77,14 +83,14 @@
 <category>测试</category>
 </item>
 <item>
-<title>Qt Markdown预览增强记录</title>
-<link>https://uwillno.com?blog=55</link>
+<title>Xml异常处理记录</title>
+<link>https://uwillno.com?blog=56</link>
 <pubDate>Fri, 12 Dec 2025 00:00:00 GMT</pubDate>
 <category>技术</category>
 </item>
 <item>
-<title>Xml异常处理记录</title>
-<link>https://uwillno.com?blog=56</link>
+<title>Qt Markdown预览增强记录</title>
+<link>https://uwillno.com?blog=55</link>
 <pubDate>Fri, 12 Dec 2025 00:00:00 GMT</pubDate>
 <category>技术</category>
 </item>
@@ -435,10 +441,6 @@
 <item>
 <title>天纪笔记</title>
 <link>https://uwillno.com?func=tj</link>
-</item>
-<item>
-<title>卡巴斯基密码管理器：txt转csv</title>
-<link>https://uwillno.com?func=kpm</link>
 </item>
 <item>
 <title>身份验证器</title>

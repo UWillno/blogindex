@@ -5,6 +5,12 @@
 <link>https://uwillno.com</link>
 <description>UWillno's Blog</description>
 <item>
+<title>WASM Blog Static Hosting Acceleration Exploration</title>
+<link>https://uwillno.com?blog=69</link>
+<pubDate>Tue, 03 Feb 2026 00:00:00 GMT</pubDate>
+<category>Technology</category>
+</item>
+<item>
 <title>Modify the hyperlink color of QML text control</title>
 <link>https://uwillno.com?blog=68</link>
 <pubDate>Sun, 01 Feb 2026 00:00:00 GMT</pubDate>
@@ -77,14 +83,14 @@
 <category>Test</category>
 </item>
 <item>
-<title>Qt Markdown preview enhancement record</title>
-<link>https://uwillno.com?blog=55</link>
+<title>XML Exception Handling Log</title>
+<link>https://uwillno.com?blog=56</link>
 <pubDate>Fri, 12 Dec 2025 00:00:00 GMT</pubDate>
 <category>Technology</category>
 </item>
 <item>
-<title>XML Exception Handling Log</title>
-<link>https://uwillno.com?blog=56</link>
+<title>Qt Markdown preview enhancement record</title>
+<link>https://uwillno.com?blog=55</link>
 <pubDate>Fri, 12 Dec 2025 00:00:00 GMT</pubDate>
 <category>Technology</category>
 </item>
@@ -435,10 +441,6 @@
 <item>
 <title>Tianji Notes</title>
 <link>https://uwillno.com?func=tj</link>
-</item>
-<item>
-<title>KPM: txt to csv</title>
-<link>https://uwillno.com?func=kpm</link>
 </item>
 <item>
 <title>Authenticator</title>
