@@ -1,1 +1,13 @@
-<!doctype html><head><meta charset="utf-8"><title>Uwilno's Blog</title><link rel="prefetch" as="image" href="https://www.blogsclub.org/badge/uwillno.com"></head><script>const MIRRORS=["https://ipv6.uwillno.com:9102","https://cloudflare.uwillno.com","https://edgeone.uwillno.com","https://vercel.uwillno.com","https://github.uwillno.com","https://netlify.uwillno.com","https://azure.uwillno.com","https://tunnel.uwillno.com"];Promise.any(MIRRORS.map(b=>fetch(b+"/blog01.wasm?_="+Math.random(),{headers:{Range:"bytes=0-32767"}}).then(r=>(r.ok||r.status===206)?b:Promise.reject()))).then(h=>location.replace(h+location.search)).catch(()=>location.replace(MIRRORS[1]+location.search));</script>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Uwilno's Blog</title>
+<link rel="prefetch" as="image" href="https://www.blogsclub.org/badge/uwillno.com">
+</head>
+<body>
+<script>
+const MIRRORS=["https://ipv6.uwillno.com:9102","https://cloudflare.uwillno.com","https://edgeone.uwillno.com","https://vercel.uwillno.com","https://github.uwillno.com","https://netlify.uwillno.com","https://azure.uwillno.com","https://tunnel.uwillno.com"];Promise.any(MIRRORS.map(b=>fetch(b+"/blog01.wasm?_="+Math.random(),{headers:{Range:"bytes=0-32767"}}).then(r=>(r.ok||r.status===206)?b:Promise.reject()))).then(h=>location.replace(h+location.search)).catch(()=>location.replace(MIRRORS[1]+location.search));
+</script>
+</body>
+</html>
